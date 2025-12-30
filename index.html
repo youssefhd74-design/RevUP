@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sushi Gate AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { 
             font-family: 'Cairo', sans-serif; 
@@ -22,108 +22,131 @@
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
         
-        /* Glassmorphism */
+        /* Glassmorphism effects */
         .glass { 
-            background: rgba(24, 24, 27, 0.85);
+            background: rgba(24, 24, 27, 0.8);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .hover-lift { transition: all 0.2s ease; }
-        .hover-lift:active { transform: scale(0.96); }
         
-        /* Loading Shimmer */
+        /* Smooth hover effects */
+        .hover-lift { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(220, 38, 38, 0.2); }
+        .hover-lift:active { transform: translateY(0); }
+        
+        /* Shimmer effect for loading */
         @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
         .shimmer {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
             background-size: 1000px 100%;
             animation: shimmer 2s infinite;
+        }
+        
+        /* Pulse glow */
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.3); } 50% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.6); } }
+        .pulse-glow { animation: pulse-glow 2s infinite; }
+        
+        /* Scroll shadow */
+        .scroll-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Menu item hover */
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+        .menu-item:hover {
+            transform: translateX(4px);
+            border-color: rgba(220, 38, 38, 0.3);
         }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
     <script>
-        // 🔴 PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE
+        // 🔴 PASTE YOUR URL HERE
         const API_URL = "https://script.google.com/macros/s/AKfycbywJbEy2ZXsyf9lephlmOY-DvWXHHL_xcCRDB8IjAd26oBpq9sYeqOPDyW0rVwjGIEkVA/exec"; 
     </script>
 
-    <div id="lang-gate" class="fixed inset-0 z-[60] bg-black flex flex-col items-center justify-center p-6 space-y-8 fade-in">
-        <div class="text-center space-y-2">
-            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-orange-600 mx-auto flex items-center justify-center text-2xl shadow-2xl shadow-red-500/40 mb-4 animate-bounce">🍣</div>
-            <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">SUSHI GATE</h1>
-            <p class="text-zinc-500">Select your language</p>
-        </div>
-        <div class="flex flex-col gap-4 w-full max-w-xs">
-            <button onclick="selectLang('en')" class="glass p-5 rounded-2xl flex items-center justify-between hover:border-red-500/50 hover:bg-zinc-800 transition group">
-                <span class="font-bold text-lg">English</span>
-                <span class="text-2xl group-hover:scale-110 transition">🇺🇸</span>
-            </button>
-            <button onclick="selectLang('ar')" class="glass p-5 rounded-2xl flex items-center justify-between hover:border-green-500/50 hover:bg-zinc-800 transition group">
-                <span class="font-bold text-lg">عربي</span>
-                <span class="text-2xl group-hover:scale-110 transition">🇪🇬</span>
-            </button>
-        </div>
-    </div>
-
-    <header class="glass p-4 border-b border-zinc-800/50 flex justify-between items-center z-30 sticky top-0 w-full shadow-lg">
+    <header class="glass p-4 border-b border-zinc-800/50 flex justify-between items-center z-30 sticky top-0 w-full scroll-shadow">
         <div class="flex items-center gap-3">
             <div class="relative">
                 <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-500/50"></div>
                 <div class="absolute inset-0 w-3 h-3 rounded-full bg-emerald-400 animate-ping opacity-75"></div>
             </div>
-            <h1 class="text-xl font-bold tracking-wider text-zinc-100">SUSHI GATE</h1>
+            <h1 class="text-2xl font-bold tracking-wider bg-gradient-to-r from-red-500 via-red-400 to-orange-500 bg-clip-text text-transparent drop-shadow-lg">SUSHI GATE</h1>
         </div>
-        <button onclick="toggleMenu()" class="text-sm bg-gradient-to-br from-red-500 to-red-600 px-5 py-2.5 rounded-full shadow-lg shadow-red-500/20 text-white font-bold flex items-center gap-2 hover-lift">
-            <span class="text-lg">🍱</span> 
-            <span id="ui-btn-menu">Menu</span>
+        <button onclick="toggleMenu()" class="text-base bg-gradient-to-br from-red-500 to-red-600 px-6 py-3 rounded-2xl border border-red-400/30 hover-lift hover:from-red-600 hover:to-red-700 font-bold flex items-center gap-2.5 shadow-lg shadow-red-500/30 text-white">
+            <span class="text-2xl">🍱</span> 
+            <span>Menu</span>
         </button>
     </header>
 
-    <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 hide-scrollbar pb-24">
-        <div id="chips-container" class="flex gap-2 overflow-x-auto pb-2 px-1 fade-in hide-scrollbar mt-4"></div>
+    <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 hide-scrollbar pb-32">
+        <div class="flex items-start gap-3 fade-in">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-sm text-white font-bold shadow-lg ring-2 ring-red-400/40">AI</div>
+            <div class="glass p-4 rounded-2xl rounded-tl-none text-sm max-w-[85%] text-zinc-100 shadow-xl leading-relaxed border-l-4 border-red-500/50">
+                Welcome to <span class="text-red-400 font-bold">Sushi Gate</span>. I'm Kenji. 
+                <br><br>Are you ready to order, or would you like a recommendation?
+            </div>
+        </div>
+        <div id="chips-container" class="flex gap-2 overflow-x-auto pb-2 px-1 fade-in hide-scrollbar"></div>
     </div>
 
-    <div class="fixed bottom-0 w-full glass p-4 border-t border-zinc-800/50 flex gap-3 items-center z-20">
-        <input type="text" id="user-input" placeholder="Ask..." 
-            class="flex-1 bg-black/40 border border-zinc-700/50 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-500 text-white"
-            onkeypress="handleEnter(event)">
-        <button onclick="sendMessage()" class="bg-gradient-to-br from-red-500 to-orange-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg hover-lift">
-            <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-            </svg>
-        </button>
+    <div class="fixed bottom-0 w-full z-20">
+        <div class="glass p-4 border-t border-zinc-800/50 flex gap-3 items-center scroll-shadow">
+            <input type="text" id="user-input" placeholder="Ask Kenji anything..." 
+                class="flex-1 bg-black/50 border border-zinc-700/50 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/30 transition-all placeholder-zinc-500"
+                onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()" class="bg-gradient-to-br from-red-500 to-orange-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30 hover-lift hover:shadow-red-500/50">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+            </button>
+        </div>
+        <div class="bg-black/60 backdrop-blur-sm py-2 text-center border-t border-zinc-900/50">
+            <p class="text-xs text-zinc-500">
+                Developed by <span class="text-zinc-400 font-semibold">YEAS Solutions</span>
+            </p>
+        </div>
     </div>
 
-    <div id="menu-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col justify-end fade-in backdrop-blur-sm">
+    <div id="menu-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex flex-col justify-end fade-in backdrop-blur-md">
         <div class="glass w-full h-[92vh] rounded-t-3xl overflow-hidden flex flex-col slide-up relative shadow-2xl border-t border-zinc-700/50">
             
             <div class="p-5 border-b border-zinc-800/50 flex justify-between items-center glass z-10">
-                <h2 class="font-bold text-xl" id="ui-menu-title">Menu</h2>
-                <button onclick="toggleMenu()" class="text-zinc-400 text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-800/50 transition">&times;</button>
+                <h2 class="font-bold text-xl" id="modal-title">Menu</h2>
+                <button onclick="toggleMenu()" class="text-zinc-400 text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-800/50 transition hover:text-white hover-lift">&times;</button>
             </div>
 
-            <div id="toast-note" class="hidden absolute top-20 left-4 right-4 glass p-4 rounded-2xl shadow-2xl z-50 text-sm fade-in border border-amber-500/20 bg-amber-500/10">
+            <div id="toast-note" class="hidden absolute top-20 left-4 right-4 glass p-4 rounded-2xl shadow-2xl z-50 text-sm fade-in border border-amber-500/40 bg-amber-500/10">
                 <div class="flex gap-3 items-start">
                     <span class="text-2xl">💡</span>
                     <div class="flex-1">
-                        <p id="toast-text" class="leading-tight text-zinc-200 mt-1">...</p>
+                        <div class="font-bold text-amber-400 mb-1">Kenji's Insight</div>
+                        <p id="toast-text" class="leading-tight text-zinc-300">Loading description...</p>
                     </div>
-                    <button onclick="document.getElementById('toast-note').classList.add('hidden')" class="text-zinc-500">✕</button>
+                    <button onclick="document.getElementById('toast-note').classList.add('hidden')" class="text-zinc-500 hover:text-white">✕</button>
                 </div>
             </div>
 
             <div id="menu-content" class="flex-1 overflow-y-auto p-4 space-y-3 pb-32 relative">
-                <div class="text-center text-zinc-500 mt-10 shimmer p-4 rounded-xl">Loading...</div>
+                <div class="text-center text-zinc-500 mt-10 shimmer p-4 rounded-xl">
+                    <div class="text-2xl mb-2">🍣</div>
+                    Loading Menu...
+                </div>
             </div>
 
-            <div id="cart-bar" class="absolute bottom-0 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 p-5 flex justify-between items-center text-white hidden cursor-pointer shadow-[0_-8px_30px_rgba(16,185,129,0.3)] hover-lift" onclick="showCheckout()">
+            <div id="cart-bar" class="absolute bottom-0 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 p-5 flex justify-between items-center text-white hidden cursor-pointer hover:from-emerald-600 hover:to-emerald-700 transition shadow-[0_-8px_30px_rgba(16,185,129,0.4)] hover-lift" onclick="showCheckout()">
                 <div class="flex flex-col">
-                    <span class="font-bold text-xl leading-none" id="cart-total">0</span>
-                    <span class="text-sm text-emerald-100 mt-1" id="cart-count">0</span>
+                    <span class="font-bold text-xl leading-none" id="cart-total">0 EGP</span>
+                    <span class="text-sm text-emerald-100 mt-1" id="cart-count">0 items</span>
                 </div>
                 <div class="flex items-center gap-3 font-bold text-lg">
-                    <span id="ui-checkout-btn">Checkout</span>
-                    <span class="text-xl rtl:rotate-180">➔</span>
+                    Checkout 
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
                 </div>
             </div>
         </div>
@@ -132,87 +155,25 @@
     <script>
         let cart = [];
         let menuData = [];
-        let currentLang = 'en'; // Default
-        
-        // UI DICTIONARY
-        const UI = {
-            en: {
-                menuBtn: "Menu",
-                placeholder: "Ask Kenji anything...",
-                menuTitle: "Menu",
-                checkout: "Checkout",
-                items: "items",
-                total: "Total Bill",
-                cash: "Cash Payment",
-                cashDesc: "Pay directly to waiter",
-                pos: "Card Payment",
-                posDesc: "POS machine on the way",
-                waiter: "Waiter will arrive after you confirm",
-                greeting: `Welcome to <span class="text-red-400 font-bold">Sushi Gate</span>. I'm Kenji.<br>Ready to order?`,
-                chips: [
-                    { label: '📜 Full Menu', val: 'menu' },
-                    { label: '🆕 New to Sushi?', val: 'new' },
-                    { label: '👨‍🍳 Chef Choice', val: 'chef' },
-                    { label: '🎎 Couple/Group', val: 'group' }
-                ]
-            },
-            ar: {
-                menuBtn: "القائمة",
-                placeholder: "اسأل كينجي...",
-                menuTitle: "قائمة الطعام",
-                checkout: "إتمام الطلب",
-                items: "أصناف",
-                total: "إجمالي الفاتورة",
-                cash: "دفع نقدي (كاش)",
-                cashDesc: "الدفع عند النادل",
-                pos: "دفع بالبطاقة",
-                posDesc: "سيحضر النادل الماكينة",
-                waiter: "سيصل النادل بعد التأكيد",
-                greeting: `أهلاً بك في <span class="text-red-400 font-bold">سوشي جيت</span>. أنا كينجي.<br>جاهز تطلب؟`,
-                chips: [
-                    { label: '📜 القائمة كاملة', val: 'menu' },
-                    { label: '🆕 جديد في السوشي؟', val: 'new' },
-                    { label: '👨‍🍳 ترشيح الشيف', val: 'chef' },
-                    { label: '🎎 أكيلة (مجموعة)', val: 'group' }
-                ]
-            }
-        };
-
         const chatContainer = document.getElementById('chat-container');
         const chipsContainer = document.getElementById('chips-container');
         const menuContent = document.getElementById('menu-content');
+        
+        // --- CHIPS CONFIG ---
+        const START_CHIPS = [
+            { label: '📜 Full Menu', val: 'menu' },
+            { label: '🆕 New to Sushi?', val: 'new' },
+            { label: '👨‍🍳 Chef Choice', val: 'chef' },
+            { label: '🎎 Couple/Group', val: 'group' }
+        ];
 
-        // --- LANGUAGE LOGIC ---
-        function selectLang(lang) {
-            currentLang = lang;
-            
-            // 1. Hide Gate
-            document.getElementById('lang-gate').classList.add('hidden');
-            
-            // 2. Set Direction & Font
-            if (lang === 'ar') {
-                document.body.dir = "rtl";
-                document.body.style.fontFamily = "'Cairo', sans-serif";
-            } else {
-                document.body.dir = "ltr";
-            }
-
-            // 3. Update Static UI
-            document.getElementById('ui-btn-menu').innerText = UI[lang].menuBtn;
-            document.getElementById('user-input').placeholder = UI[lang].placeholder;
-            document.getElementById('ui-menu-title').innerText = UI[lang].menuTitle;
-            document.getElementById('ui-checkout-btn').innerText = UI[lang].checkout;
-
-            // 4. Trigger Greeting
-            addMessage(UI[lang].greeting, 'ai');
-            renderChips(UI[lang].chips);
-        }
+        window.onload = () => { renderChips(START_CHIPS); };
 
         function renderChips(options) {
             chipsContainer.innerHTML = ''; 
             options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "whitespace-nowrap bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700/50 px-5 py-2.5 rounded-full text-sm hover-lift hover:border-red-500/50 transition-all shrink-0 fade-in font-medium shadow-md";
+                btn.className = "whitespace-nowrap bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700/50 px-5 py-2.5 rounded-full text-sm hover-lift hover:border-red-500/50 hover:from-red-500/10 hover:to-orange-500/10 transition-all shrink-0 fade-in font-medium shadow-md";
                 btn.innerText = opt.label;
                 btn.onclick = () => handleChipClick(opt);
                 chipsContainer.appendChild(btn);
@@ -221,25 +182,18 @@
 
         function handleChipClick(opt) {
             addMessage(opt.label, 'user');
-            if (opt.val === 'menu') { 
-                toggleMenu(); 
-                addMessage(currentLang === 'ar' ? "تفضل القائمة." : "Here is the menu.", 'ai'); 
-                renderChips(UI[currentLang].chips); 
-            } 
+            if (opt.val === 'menu') { toggleMenu(); addMessage("Here is the menu.", 'ai'); renderChips(START_CHIPS); } 
             else if (opt.val === 'new') {
                 const loading = addTypingIndicator();
                 setTimeout(() => {
                     removeMessage(loading);
-                    const msg = currentLang === 'ar' 
-                        ? "للمبتدئين، أرشح لك الأصناف المطهية مثل **Volcano Roll** أو **Shrimp Tempura**."
-                        : "For beginners, try cooked items like **Volcano Roll** or **Shrimp Tempura**.";
-                    addMessage(msg, 'ai');
-                    renderChips([{ label: currentLang === 'ar' ? '🔙 عودة' : '🔙 Back', val: 'reset' }]);
+                    addMessage("For beginners, try cooked items like **Volcano Roll** or **Shrimp Tempura**.", 'ai');
+                    renderChips([{ label: '🔙 Back', val: 'reset' }]);
                 }, 800);
             }
-            else if (opt.val === 'chef') { sendMessageInternal(currentLang === 'ar' ? "ترشيحات الشيف؟" : "Chef's recommendation?"); }
-            else if (opt.val === 'group') { sendMessageInternal(currentLang === 'ar' ? "اقتراحات لمجموعة؟" : "Suggestion for a group?"); }
-            else if (opt.val === 'reset') { renderChips(UI[currentLang].chips); }
+            else if (opt.val === 'chef') { sendMessageInternal("Chef's recommendation?"); }
+            else if (opt.val === 'group') { sendMessageInternal("Suggestion for a group?"); }
+            else if (opt.val === 'reset') { renderChips(START_CHIPS); }
         }
 
         // --- CORE CHAT ---
@@ -250,7 +204,7 @@
             renderChips([]); 
             addMessage(text, 'user');
             input.value = '';
-            if (text.toLowerCase().includes('menu') || text.includes('منيو')) { toggleMenu(); return; }
+            if (text.toLowerCase().includes('menu')) { toggleMenu(); return; }
             sendMessageInternal(text);
         }
 
@@ -259,33 +213,27 @@
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: 'chat', message: text, cart: cart, context: context, lang: currentLang })
+                    body: JSON.stringify({ action: 'chat', message: text, cart: cart, context: context })
                 });
                 const data = await res.json();
                 removeMessage(loadingId);
                 if (data.text) addMessage(data.text, 'ai');
                 if (data.openMenu) toggleMenu();
-                if(chipsContainer.children.length === 0) renderChips(UI[currentLang].chips);
+                if(chipsContainer.children.length === 0) renderChips(START_CHIPS);
             } catch (e) {
                 removeMessage(loadingId);
+                addMessage("Connection error. Please try again.", 'ai');
             }
         }
 
         function addMessage(text, sender) {
             const div = document.createElement('div');
-            // Logic for RTL alignment
-            const alignClass = sender === 'user' ? 'justify-end' : 'justify-start';
-            div.className = `flex items-end gap-3 fade-in ${alignClass}`;
-            
+            div.className = `flex items-end gap-3 fade-in ${sender === 'user' ? 'justify-end' : ''}`;
             const avatar = sender === 'ai' ? `<div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center text-sm shrink-0 text-white font-bold shadow-lg ring-2 ring-red-500/30">AI</div>` : ``;
             const formatted = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
-            
-            // Swap bubble colors
-            const bubbleClass = sender === 'ai' 
-                ? "glass text-zinc-100 p-4 rounded-2xl text-sm max-w-[85%] shadow-xl leading-relaxed border-b-2 border-red-500/20"
-                : "bg-gradient-to-br from-red-500 to-orange-600 text-white p-4 rounded-2xl text-sm max-w-[85%] shadow-xl";
-
-            div.innerHTML = sender === 'ai' ? `${avatar}<div class="${bubbleClass}">${formatted}</div>` : `<div class="${bubbleClass}">${formatted}</div>`;
+            div.innerHTML = sender === 'ai' 
+                ? `${avatar}<div class="glass text-zinc-100 p-4 rounded-2xl rounded-tl-none text-sm max-w-[80%] shadow-xl leading-relaxed border-l-4 border-red-500/50">${formatted}</div>`
+                : `<div class="bg-gradient-to-br from-red-500 to-orange-600 text-white p-4 rounded-2xl rounded-br-none text-sm max-w-[80%] shadow-xl">${formatted}</div>`;
             chatContainer.appendChild(div);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
@@ -295,7 +243,7 @@
             const div = document.createElement('div');
             div.id = id;
             div.className = "flex items-center gap-3 p-4 fade-in";
-            div.innerHTML = `<div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-sm text-white font-bold shadow-lg">AI</div><div class="glass p-4 rounded-2xl flex gap-1.5"><div class="w-2 h-2 bg-red-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-orange-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-red-400 rounded-full typing-dot"></div></div>`;
+            div.innerHTML = `<div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-sm text-white font-bold shadow-lg ring-2 ring-red-400/40">AI</div><div class="glass p-4 rounded-2xl rounded-tl-none flex gap-1.5 border-l-4 border-red-500/50"><div class="w-2 h-2 bg-red-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-orange-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-red-400 rounded-full typing-dot"></div></div>`;
             chatContainer.appendChild(div);
             chatContainer.scrollTop = chatContainer.scrollHeight;
             return id;
@@ -309,6 +257,7 @@
             const isHidden = modal.classList.contains('hidden');
             if (isHidden) {
                 modal.classList.remove('hidden');
+                document.getElementById('modal-title').innerText = "Menu";
                 if (menuData.length === 0) await loadMenu();
                 else renderMenu();
             } else {
@@ -323,7 +272,7 @@
                 menuData = data.menu || [];
                 renderMenu();
             } catch(e) {
-                menuContent.innerHTML = '<div class="text-center text-zinc-500 p-8">Failed to load menu.</div>';
+                menuContent.innerHTML = '<div class="text-center text-zinc-500 p-8 glass rounded-2xl">Failed to load menu. Please try again.</div>';
             }
         }
 
@@ -334,7 +283,7 @@
                     `<div class="w-20 h-20 rounded-xl bg-zinc-800/50 flex items-center justify-center text-4xl shrink-0 ring-2 ring-zinc-700/50">${item.emoji}</div>`;
 
                 return `
-                <div class="glass p-4 rounded-2xl flex justify-between items-center fade-in border border-zinc-800/50 hover-lift mb-3">
+                <div class="menu-item glass p-4 rounded-2xl flex justify-between items-center fade-in border border-zinc-800/50 hover:shadow-lg">
                     <div class="flex items-center gap-4 overflow-hidden">
                         ${visualHTML}
                         <div class="min-w-0">
@@ -343,8 +292,8 @@
                         </div>
                     </div>
                     <div class="flex gap-2 shrink-0">
-                        <button onclick="explainItem('${item.name}')" class="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-400 border border-zinc-700/50 glass hover:text-white hover:border-red-500/50">?</button>
-                        <button onclick="addToCart('${item.id}')" class="glass w-10 h-10 rounded-xl flex items-center justify-center text-green-400 border border-zinc-700/50 text-xl hover:bg-green-500/10">+</button>
+                        <button onclick="explainItem('${item.name}')" class="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-400 border border-zinc-700/50 glass text-base font-bold hover:text-white hover:border-red-500/50 hover-lift">?</button>
+                        <button onclick="addToCart('${item.id}')" class="glass w-10 h-10 rounded-xl flex items-center justify-center text-green-400 hover:bg-green-500/10 border border-zinc-700/50 hover:border-green-500/50 text-xl hover-lift">+</button>
                     </div>
                 </div>`;
             }).join('');
@@ -352,33 +301,41 @@
             updateCartUI();
         }
 
+        // --- EXPLAIN ITEM FEATURE ---
         async function explainItem(itemName) {
             const toast = document.getElementById('toast-note');
             const toastText = document.getElementById('toast-text');
+            
+            // Show Loading
             toast.classList.remove('hidden');
-            toastText.innerText = currentLang === 'ar' ? "كينجي يقرأ المكونات..." : "Kenji is checking ingredients...";
+            toastText.innerHTML = '<span class="shimmer inline-block w-full h-4 rounded"></span><span class="shimmer inline-block w-3/4 h-4 rounded mt-2"></span>';
             
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: 'chat', message: `Describe ${itemName}`, context: 'explain', lang: currentLang })
+                    body: JSON.stringify({ action: 'chat', message: `Describe ${itemName}`, context: 'explain' })
                 });
                 const data = await res.json();
                 toastText.innerText = data.text;
-                setTimeout(() => { toast.classList.add('hidden'); }, 6000);
+                
+                // Hide after 7 seconds
+                setTimeout(() => { toast.classList.add('hidden'); }, 7000);
             } catch(e) {
                 toast.classList.add('hidden');
             }
         }
 
+        // --- CHECKOUT & UPSELL LOGIC ---
         function addToCart(id) {
             const item = menuData.find(i => i.id == id);
             if(item) { 
                 cart.push(item); 
                 updateCartUI();
+                // Visual feedback
                 const btn = event.target;
                 btn.innerText = '✓';
-                setTimeout(() => { btn.innerText = '+'; }, 1000);
+                btn.classList.add('text-green-500');
+                setTimeout(() => { btn.innerText = '+'; btn.classList.remove('text-green-500'); }, 1000);
             }
         }
 
@@ -386,47 +343,54 @@
             const bar = document.getElementById('cart-bar');
             if (cart.length > 0) {
                 bar.classList.remove('hidden');
-                document.getElementById('cart-count').innerText = `${cart.length} ${UI[currentLang].items}`;
+                document.getElementById('cart-count').innerText = `${cart.length} items`;
                 const sum = cart.reduce((acc, item) => acc + item.price, 0);
                 document.getElementById('cart-total').innerText = `${sum} EGP`;
             }
         }
 
         function showCheckout() {
-            document.getElementById('ui-menu-title').innerText = UI[currentLang].checkout;
+            document.getElementById('modal-title').innerText = "Checkout";
             const sum = cart.reduce((acc, item) => acc + item.price, 0);
-            const txt = UI[currentLang];
             
+            // Render Checkout View
             menuContent.innerHTML = `
                 <div class="space-y-4 fade-in">
                     <div class="glass p-6 rounded-2xl text-center border border-zinc-800/50">
-                        <div class="text-zinc-400 text-sm mb-2">${txt.total}</div>
-                        <div class="text-4xl font-bold text-emerald-400 mb-1">${sum} EGP</div>
-                        <div class="text-xs text-zinc-500">${cart.length} ${txt.items}</div>
+                        <div class="text-zinc-400 text-sm mb-2">Total Bill</div>
+                        <div class="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent mb-1">${sum} EGP</div>
+                        <div class="text-xs text-zinc-500">${cart.length} items</div>
                     </div>
                     
                     <div class="space-y-3 mt-6">
-                        <button onclick="processPayment('Cash')" class="w-full glass p-5 rounded-2xl flex justify-between items-center hover-lift border border-zinc-800/50">
+                        <button onclick="processPayment('Cash')" class="w-full glass p-5 rounded-2xl flex justify-between items-center hover-lift hover:border-green-500/50 transition border border-zinc-800/50">
                             <div class="flex items-center gap-3">
                                 <span class="text-3xl">💵</span>
-                                <div class="text-start">
-                                    <div class="font-bold text-base">${txt.cash}</div>
-                                    <div class="text-xs text-zinc-500">${txt.cashDesc}</div>
+                                <div class="text-left">
+                                    <div class="font-bold text-base">Cash Payment</div>
+                                    <div class="text-xs text-zinc-500">Pay directly to waiter</div>
                                 </div>
                             </div>
+                            <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
                         </button>
-                        <button onclick="processPayment('POS')" class="w-full glass p-5 rounded-2xl flex justify-between items-center hover-lift border border-zinc-800/50">
+                        <button onclick="processPayment('POS')" class="w-full glass p-5 rounded-2xl flex justify-between items-center hover-lift hover:border-green-500/50 transition border border-zinc-800/50">
                             <div class="flex items-center gap-3">
                                 <span class="text-3xl">💳</span>
-                                <div class="text-start">
-                                    <div class="font-bold text-base">${txt.pos}</div>
-                                    <div class="text-xs text-zinc-500">${txt.posDesc}</div>
+                                <div class="text-left">
+                                    <div class="font-bold text-base">Card Payment</div>
+                                    <div class="text-xs text-zinc-500">POS machine on the way</div>
                                 </div>
                             </div>
+                            <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
                         </button>
                     </div>
+                    
                     <div class="text-xs text-zinc-500 text-center mt-6 p-4 glass rounded-xl border border-zinc-800/50">
-                        <span class="text-base mr-1">⏱️</span> ${txt.waiter}
+                        <span class="text-base mr-1">⏱️</span> Waiter will arrive after you confirm
                     </div>
                 </div>
             `;
@@ -435,17 +399,18 @@
 
         function processPayment(type) {
             toggleMenu();
+            
             const msg = type === 'Cash' 
-                ? (currentLang === 'ar' ? "✅ تم تأكيد الطلب! سأبلغ النادل بالدفع النقدي." : "✅ Confirmed! Paying Cash.")
-                : (currentLang === 'ar' ? "✅ تم تأكيد الطلب! النادل سيحضر ماكينة البطاقات." : "✅ Confirmed! Waiter bringing POS.");
+                ? "✅ Order confirmed! I'll let the waiter know you are paying Cash."
+                : "✅ Order confirmed! The waiter will bring the POS machine shortly.";
             
             addMessage(msg, 'ai');
             cart = [];
             updateCartUI();
 
             setTimeout(() => {
-                sendMessageInternal("Upsell drinks", "upsell");
-            }, 2500);
+                sendMessageInternal("Upsell drinks now", "upsell");
+            }, 2000);
         }
     </script>
 </body>
