@@ -8,38 +8,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         /* BASE STYLES */
-        body { 
-            font-family: 'Cairo', sans-serif; 
+        body {
+            font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
-            color: white; 
-            /* Prevents "Pull to Refresh" on mobile which feels web-like */
+            color: white;
             overscroll-behavior-y: none;
+            -webkit-tap-highlight-color: transparent; /* Prevent tap highlights on mobile */
         }
-        
+       
         /* HIDE SCROLLBARS BUT ALLOW SCROLLING */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
+        
         /* ANIMATIONS */
         .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide-up { animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        
+       
         /* TYPING INDICATOR */
         .typing-dot { animation: bounce 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-        
+       
         /* GLASS EFFECTS */
-        .glass { 
+        .glass {
             background: rgba(24, 24, 27, 0.85);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px); /* Safari support */
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        
+       
         /* SHIMMER LOADER */
         @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
         .shimmer {
@@ -47,19 +47,21 @@
             background-size: 1000px 100%;
             animation: shimmer 2s infinite;
         }
-
-        /* 📱 SAFE AREA SPACING (For iPhone X and newer) */
-        .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
+        
+        /* SAFE AREA SPACING */
+        .safe-pb { padding-bottom: max(1rem, env(safe-area-inset-bottom)); } /* Improved padding */
         .safe-pt { padding-top: env(safe-area-inset-top); }
+        
+        /* ACCESSIBILITY */
+        button, input { outline: none; } /* But add focus styles */
+        button:focus-visible, input:focus-visible { ring-2 ring-red-500; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
-
     <script>
         // 🔴🔴🔴 PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE 🔴🔴🔴
-        const API_URL = "PASTE_YOUR_WEB_APP_URL_HERE"; 
+        const API_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
     </script>
-
     <div id="lang-gate" class="fixed inset-0 z-[60] bg-black flex flex-col items-center justify-center p-6 space-y-8 fade-in">
         <div class="text-center space-y-2">
             <div class="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-orange-600 mx-auto flex items-center justify-center text-3xl shadow-2xl shadow-red-500/40 mb-4 animate-bounce">🍣</div>
@@ -77,7 +79,6 @@
             </button>
         </div>
     </div>
-
     <header class="glass p-4 border-b border-zinc-800/50 flex justify-between items-center z-30 sticky top-0 w-full shadow-lg safe-pt">
         <div class="flex items-center gap-3">
             <div class="relative">
@@ -87,35 +88,31 @@
             <h1 class="text-lg font-bold tracking-wider text-zinc-100">SUSHI GATE</h1>
         </div>
         <button onclick="toggleMenu()" class="text-sm bg-gradient-to-br from-red-500 to-red-600 px-5 py-2 rounded-full shadow-lg shadow-red-500/20 text-white font-bold flex items-center gap-2 active:scale-95 transition-transform">
-            <span class="text-lg">🍱</span> 
+            <span class="text-lg">🍱</span>
             <span id="ui-btn-menu">Menu</span>
         </button>
     </header>
-
     <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 hide-scrollbar pb-24">
         <div id="chips-container" class="flex gap-2 overflow-x-auto pb-2 px-1 fade-in hide-scrollbar mt-2"></div>
     </div>
-
     <div class="fixed bottom-0 w-full glass p-3 border-t border-zinc-800/50 flex gap-3 items-center z-20 safe-pb">
-        <input type="text" id="user-input" placeholder="Ask..." 
+        <input type="text" id="user-input" placeholder="Ask..."
             class="flex-1 bg-black/40 border border-zinc-700/50 rounded-2xl px-5 py-3 text-base focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-500 text-white"
             onkeypress="handleEnter(event)">
-        
+       
         <button onclick="sendMessage()" class="bg-gradient-to-br from-red-500 to-orange-600 text-white w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
             <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
             </svg>
         </button>
     </div>
-
     <div id="menu-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col justify-end fade-in backdrop-blur-sm">
         <div class="glass w-full h-[92vh] rounded-t-3xl overflow-hidden flex flex-col slide-up relative shadow-2xl border-t border-zinc-700/50">
-            
+           
             <div class="p-5 border-b border-zinc-800/50 flex justify-between items-center glass z-10">
                 <h2 class="font-bold text-xl" id="ui-menu-title">Menu</h2>
                 <button onclick="toggleMenu()" class="text-zinc-400 text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-800/50 transition">&times;</button>
             </div>
-
             <div id="toast-note" class="hidden absolute top-20 left-4 right-4 glass p-4 rounded-2xl shadow-2xl z-50 text-sm fade-in border border-amber-500/20 bg-amber-500/10">
                 <div class="flex gap-3 items-start">
                     <span class="text-2xl">💡</span>
@@ -125,11 +122,13 @@
                     <button onclick="document.getElementById('toast-note').classList.add('hidden')" class="text-zinc-500 p-2">✕</button>
                 </div>
             </div>
-
+            <div class="p-4 sticky top-0 glass z-10 border-b border-zinc-800/50">
+                <input type="text" id="menu-search" placeholder="Search menu..." oninput="filterMenu()"
+                    class="w-full bg-black/40 border border-zinc-700/50 rounded-2xl px-5 py-3 text-base focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-500 text-white">
+            </div>
             <div id="menu-content" class="flex-1 overflow-y-auto p-4 space-y-3 pb-32 relative">
                 <div class="text-center text-zinc-500 mt-10 shimmer p-4 rounded-xl">Loading...</div>
             </div>
-
             <div id="cart-bar" class="absolute bottom-0 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 p-5 safe-pb flex justify-between items-center text-white hidden cursor-pointer shadow-[0_-8px_30px_rgba(16,185,129,0.3)] active:scale-[0.98] transition-transform" onclick="showCheckout()">
                 <div class="flex flex-col">
                     <span class="font-bold text-xl leading-none" id="cart-total">0</span>
@@ -142,13 +141,13 @@
             </div>
         </div>
     </div>
-
     <script>
-        let cart = [];
+        let cart = JSON.parse(localStorage.getItem('cart')) || []; // Persist cart
         let menuData = [];
-        let currentLang = 'en';
+        let currentLang = localStorage.getItem('lang') || null;
+        let preferences = { vegetarian: false, allergies: [] }; // New: User preferences
         
-        // --- DICTIONARY ---
+        // --- DICTIONARY (Expanded) ---
         const UI = {
             en: {
                 menuBtn: "Menu",
@@ -167,7 +166,8 @@
                     { label: '📜 Full Menu', val: 'menu' },
                     { label: '🆕 New to Sushi?', val: 'new' },
                     { label: '👨‍🍳 Chef Choice', val: 'chef' },
-                    { label: '🎎 Couple/Group', val: 'group' }
+                    { label: '🎎 Couple/Group', val: 'group' },
+                    { label: '🌱 Vegetarian?', val: 'veg' } // New chip
                 ]
             },
             ar: {
@@ -187,39 +187,45 @@
                     { label: '📜 القائمة كاملة', val: 'menu' },
                     { label: '🆕 جديد في السوشي؟', val: 'new' },
                     { label: '👨‍🍳 ترشيح الشيف', val: 'chef' },
-                    { label: '🎎 أكيلة (مجموعة)', val: 'group' }
+                    { label: '🎎 أكيلة (مجموعة)', val: 'group' },
+                    { label: '🌱 نباتي؟', val: 'veg' } // New chip
                 ]
             }
         };
-
         const chatContainer = document.getElementById('chat-container');
         const chipsContainer = document.getElementById('chips-container');
         const menuContent = document.getElementById('menu-content');
-
+        
+        // Auto-select language if persisted
+        if (currentLang) {
+            selectLang(currentLang);
+            document.getElementById('lang-gate').classList.add('hidden');
+        }
+        
         // --- LANGUAGE LOGIC ---
         function selectLang(lang) {
             currentLang = lang;
+            localStorage.setItem('lang', lang);
             document.getElementById('lang-gate').classList.add('hidden');
-            
+           
             // Handle Direction & Mirroring
             if (lang === 'ar') {
                 document.body.dir = "rtl";
             } else {
                 document.body.dir = "ltr";
             }
-
             // Update Static Labels
             document.getElementById('ui-btn-menu').innerText = UI[lang].menuBtn;
             document.getElementById('user-input').placeholder = UI[lang].placeholder;
             document.getElementById('ui-menu-title').innerText = UI[lang].menuTitle;
             document.getElementById('ui-checkout-btn').innerText = UI[lang].checkout;
-
+            document.getElementById('menu-search').placeholder = lang === 'ar' ? 'بحث في القائمة...' : 'Search menu...';
             addMessage(UI[lang].greeting, 'ai');
             renderChips(UI[lang].chips);
+            updateCartUI(); // Refresh cart UI
         }
-
         function renderChips(options) {
-            chipsContainer.innerHTML = ''; 
+            chipsContainer.innerHTML = '';
             options.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = "whitespace-nowrap bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700/50 px-5 py-2.5 rounded-full text-sm active:scale-95 transition-all shrink-0 fade-in font-medium shadow-md";
@@ -228,19 +234,18 @@
                 chipsContainer.appendChild(btn);
             });
         }
-
         function handleChipClick(opt) {
             addMessage(opt.label, 'user');
-            if (opt.val === 'menu') { 
-                toggleMenu(); 
-                addMessage(currentLang === 'ar' ? "تفضل القائمة." : "Here is the menu.", 'ai'); 
-                renderChips(UI[currentLang].chips); 
-            } 
+            if (opt.val === 'menu') {
+                toggleMenu();
+                addMessage(currentLang === 'ar' ? "تفضل القائمة." : "Here is the menu.", 'ai');
+                renderChips(UI[currentLang].chips);
+            }
             else if (opt.val === 'new') {
                 const loading = addTypingIndicator();
                 setTimeout(() => {
                     removeMessage(loading);
-                    const msg = currentLang === 'ar' 
+                    const msg = currentLang === 'ar'
                         ? "للمبتدئين، أرشح الأصناف المطهية مثل **Volcano Roll** أو **Shrimp Tempura**."
                         : "For beginners, try cooked items like **Volcano Roll** or **Shrimp Tempura**.";
                     addMessage(msg, 'ai');
@@ -249,67 +254,69 @@
             }
             else if (opt.val === 'chef') { sendMessageInternal(currentLang === 'ar' ? "ترشيحات الشيف؟" : "Chef's recommendation?"); }
             else if (opt.val === 'group') { sendMessageInternal(currentLang === 'ar' ? "اقتراحات لمجموعة؟" : "Suggestion for a group?"); }
+            else if (opt.val === 'veg') {
+                preferences.vegetarian = true;
+                sendMessageInternal(currentLang === 'ar' ? "اقتراحات نباتية؟" : "Vegetarian suggestions?", 'recommend');
+            }
             else if (opt.val === 'reset') { renderChips(UI[currentLang].chips); }
         }
-
         // --- CHAT LOGIC ---
         async function sendMessage() {
             const input = document.getElementById('user-input');
             const text = input.value.trim();
             if (!text) return;
-            renderChips([]); 
+            renderChips([]);
             addMessage(text, 'user');
             input.value = '';
             if (text.toLowerCase().includes('menu') || text.includes('منيو')) { toggleMenu(); return; }
             sendMessageInternal(text);
         }
-
         async function sendMessageInternal(text, context = "chat") {
             const loadingId = addTypingIndicator();
             try {
+                const payload = { action: 'chat', message: text, cart: cart, context: context, lang: currentLang };
+                if (context === 'recommend') payload.action = 'recommend'; // Use new endpoint
                 const res = await fetch(API_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: 'chat', message: text, cart: cart, context: context, lang: currentLang })
+                    body: JSON.stringify(payload)
                 });
                 const data = await res.json();
                 removeMessage(loadingId);
                 if (data.text) addMessage(data.text, 'ai');
                 if (data.openMenu) toggleMenu();
+                if (data.items) { // Render recommended items in menu
+                    menuData = data.items;
+                    toggleMenu();
+                    renderMenu();
+                }
                 if(chipsContainer.children.length === 0) renderChips(UI[currentLang].chips);
             } catch (e) {
                 removeMessage(loadingId);
+                addMessage(currentLang === 'ar' ? "خطأ في الاتصال." : "Connection error.", 'ai');
             }
         }
-
         function addMessage(text, sender) {
             const div = document.createElement('div');
-            // MOBILE RTL FIX: Ensure User is always on "End" side (Left in AR, Right in EN)
             const alignClass = sender === 'user' ? 'justify-end' : 'justify-start';
             div.className = `flex items-end gap-2 fade-in ${alignClass}`;
-            
+           
             const avatar = sender === 'ai' ? `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center text-xs shrink-0 text-white font-bold shadow-lg ring-1 ring-white/10">AI</div>` : ``;
             const formatted = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
-            
-            // RTL BUBBLE CORNERS FLIPPING
-            // In LTR: AI has Top-Left corner flat. In RTL: AI should have Top-Right corner flat.
+           
             const aiBubble = "glass text-zinc-100 p-3 rounded-2xl text-sm max-w-[85%] shadow-md leading-relaxed rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none border-b border-white/5";
             const userBubble = "bg-gradient-to-br from-red-500 to-orange-600 text-white p-3 rounded-2xl text-sm max-w-[85%] shadow-md rounded-br-none rtl:rounded-br-2xl rtl:rounded-bl-none";
-
             const bubbleClass = sender === 'ai' ? aiBubble : userBubble;
-
             div.innerHTML = sender === 'ai' ? `${avatar}<div class="${bubbleClass}">${formatted}</div>` : `<div class="${bubbleClass}">${formatted}</div>`;
             chatContainer.appendChild(div);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
-
         function addTypingIndicator() {
             const id = 'loading-' + Date.now();
             const div = document.createElement('div');
             div.id = id;
             div.className = "flex items-center gap-2 p-4 fade-in";
-            // Flip tail for loading bubble too
             const bubbleClass = "glass p-3 rounded-2xl flex gap-1.5 rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none";
-            
+           
             div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-xs text-white font-bold shadow-lg">AI</div><div class="${bubbleClass}"><div class="w-1.5 h-1.5 bg-red-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-orange-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-red-400 rounded-full typing-dot"></div></div>`;
             chatContainer.appendChild(div);
             chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -317,8 +324,7 @@
         }
         function removeMessage(id) { const el = document.getElementById(id); if (el) el.remove(); }
         function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
-
-        // --- MENU LOGIC ---
+        // --- MENU LOGIC (Enhanced with Search, Categories, Quantities) ---
         async function toggleMenu() {
             const modal = document.getElementById('menu-modal');
             const isHidden = modal.classList.contains('hidden');
@@ -330,7 +336,6 @@
                 modal.classList.add('hidden');
             }
         }
-
         async function loadMenu() {
             try {
                 const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'get_menu' }) });
@@ -341,32 +346,51 @@
                 menuContent.innerHTML = '<div class="text-center text-zinc-500 p-8">Failed to load menu.</div>';
             }
         }
+        function renderMenu(filteredData = menuData) {
+            // Group by category for better UX
+            const groups = filteredData.reduce((acc, item) => {
+                const cat = item.cat || 'Other';
+                if (!acc[cat]) acc[cat] = [];
+                acc[cat].push(item);
+                return acc;
+            }, {});
 
-        function renderMenu() {
-            const listHtml = menuData.map(item => {
-                let visualHTML = item.image ? 
-                    `<div class="relative w-20 h-20 rounded-xl overflow-hidden bg-zinc-800 shrink-0 ring-1 ring-white/10"><img src="${item.image}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="absolute inset-0 hidden items-center justify-center text-4xl bg-zinc-800" style="display:none;">${item.emoji}</div></div>` :
-                    `<div class="w-20 h-20 rounded-xl bg-zinc-800/50 flex items-center justify-center text-4xl shrink-0 ring-1 ring-white/10">${item.emoji}</div>`;
-
-                return `
-                <div class="glass p-3 rounded-2xl flex justify-between items-center fade-in border border-zinc-800/50 active:bg-zinc-800 transition-colors mb-3">
-                    <div class="flex items-center gap-4 overflow-hidden">
-                        ${visualHTML}
-                        <div class="min-w-0">
-                            <div class="font-bold text-base truncate text-zinc-100 mb-1">${item.name}</div>
-                            <div class="text-sm text-red-400 font-bold">${item.price} EGP</div>
-                        </div>
-                    </div>
-                    <div class="flex gap-2 shrink-0">
-                        <button onclick="explainItem('${item.name}')" class="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-400 border border-zinc-700/50 glass active:text-white">?</button>
-                        <button onclick="addToCart('${item.id}')" class="glass w-10 h-10 rounded-xl flex items-center justify-center text-green-400 border border-zinc-700/50 text-xl active:bg-green-500/20">+</button>
-                    </div>
+            let html = '';
+            for (let cat in groups) {
+                html += `<div class="mb-6">
+                    <h3 class="text-lg font-bold mb-3 text-zinc-300 sticky top-0 glass p-3 rounded-xl border-b border-zinc-800/50">${cat}</h3>
+                    ${groups[cat].map(item => {
+                        const qty = cart.filter(c => c.id === item.id).length; // Simple quantity count
+                        let visualHTML = item.image ?
+                            `<div class="relative w-20 h-20 rounded-xl overflow-hidden bg-zinc-800 shrink-0 ring-1 ring-white/10"><img src="${item.image}" loading="lazy" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="absolute inset-0 hidden items-center justify-center text-4xl bg-zinc-800" style="display:none;">${item.emoji}</div></div>` :
+                            `<div class="w-20 h-20 rounded-xl bg-zinc-800/50 flex items-center justify-center text-4xl shrink-0 ring-1 ring-white/10">${item.emoji}</div>`;
+                        return `
+                        <div class="glass p-3 rounded-2xl flex justify-between items-center fade-in border border-zinc-800/50 active:bg-zinc-800 transition-colors mb-3">
+                            <div class="flex items-center gap-4 overflow-hidden">
+                                ${visualHTML}
+                                <div class="min-w-0">
+                                    <div class="font-bold text-base truncate text-zinc-100 mb-1">${item.name}</div>
+                                    <div class="text-sm text-red-400 font-bold">${item.price} EGP</div>
+                                    ${qty > 0 ? `<div class="text-xs text-emerald-400 mt-1">Qty: ${qty}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="flex gap-2 shrink-0">
+                                <button onclick="explainItem('${item.name}')" class="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-400 border border-zinc-700/50 glass active:text-white">?</button>
+                                <button onclick="removeFromCart('${item.id}')" class="w-10 h-10 rounded-xl flex items-center justify-center text-red-400 border border-zinc-700/50 glass active:bg-red-500/20 ${qty === 0 ? 'hidden' : ''}">-</button>
+                                <button onclick="addToCart('${item.id}')" class="glass w-10 h-10 rounded-xl flex items-center justify-center text-green-400 border border-zinc-700/50 text-xl active:bg-green-500/20">+</button>
+                            </div>
+                        </div>`;
+                    }).join('')}
                 </div>`;
-            }).join('');
-            menuContent.innerHTML = listHtml;
+            }
+            menuContent.innerHTML = html || '<div class="text-center text-zinc-500 p-8">No items found.</div>';
             updateCartUI();
         }
-
+        function filterMenu() {
+            const search = document.getElementById('menu-search').value.toLowerCase();
+            const filtered = menuData.filter(item => item.name.toLowerCase().includes(search) || item.desc.toLowerCase().includes(search));
+            renderMenu(filtered);
+        }
         async function explainItem(itemName) {
             const toast = document.getElementById('toast-note');
             const toastText = document.getElementById('toast-text');
@@ -382,12 +406,13 @@
                 setTimeout(() => { toast.classList.add('hidden'); }, 6000);
             } catch(e) { toast.classList.add('hidden'); }
         }
-
         function addToCart(id) {
             const item = menuData.find(i => i.id == id);
-            if(item) { 
-                cart.push(item); 
+            if(item) {
+                cart.push(item);
+                localStorage.setItem('cart', JSON.stringify(cart));
                 updateCartUI();
+                renderMenu(); // Refresh quantities
                 const btn = event.target;
                 const oldText = btn.innerText;
                 btn.innerText = '✓';
@@ -395,7 +420,15 @@
                 setTimeout(() => { btn.innerText = oldText; btn.classList.remove('text-green-500'); }, 800);
             }
         }
-
+        function removeFromCart(id) {
+            const index = cart.findIndex(c => c.id === id);
+            if (index > -1) {
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartUI();
+                renderMenu(); // Refresh
+            }
+        }
         function updateCartUI() {
             const bar = document.getElementById('cart-bar');
             if (cart.length > 0) {
@@ -403,22 +436,35 @@
                 document.getElementById('cart-count').innerText = `${cart.length} ${UI[currentLang].items}`;
                 const sum = cart.reduce((acc, item) => acc + item.price, 0);
                 document.getElementById('cart-total').innerText = `${sum} EGP`;
+            } else {
+                bar.classList.add('hidden');
             }
         }
-
         function showCheckout() {
             document.getElementById('ui-menu-title').innerText = UI[currentLang].checkout;
             const sum = cart.reduce((acc, item) => acc + item.price, 0);
             const txt = UI[currentLang];
-            
+           
+            // Group cart items for display
+            const cartGroups = cart.reduce((acc, item) => {
+                acc[item.id] = (acc[item.id] || 0) + 1;
+                return acc;
+            }, {});
+            let cartHtml = '';
+            for (let id in cartGroups) {
+                const item = menuData.find(i => i.id == id);
+                if (item) cartHtml += `<div class="flex justify-between text-sm mb-2"><span>${item.name} x${cartGroups[id]}</span><span>${item.price * cartGroups[id]} EGP</span></div>`;
+            }
+           
             menuContent.innerHTML = `
                 <div class="space-y-4 fade-in">
-                    <div class="glass p-6 rounded-2xl text-center border border-zinc-800/50">
+                    <div class="glass p-6 rounded-2xl border border-zinc-800/50">
                         <div class="text-zinc-400 text-sm mb-2">${txt.total}</div>
                         <div class="text-4xl font-bold text-emerald-400 mb-1">${sum} EGP</div>
-                        <div class="text-xs text-zinc-500">${cart.length} ${txt.items}</div>
+                        <div class="text-xs text-zinc-500 mb-4">${cart.length} ${txt.items}</div>
+                        <div class="border-t border-zinc-800/50 pt-4">${cartHtml}</div>
                     </div>
-                    
+                   
                     <div class="space-y-3 mt-6">
                         <button onclick="processPayment('Cash')" class="w-full glass p-5 rounded-2xl flex justify-between items-center active:bg-zinc-800 border border-zinc-800/50">
                             <div class="flex items-center gap-3">
@@ -446,17 +492,16 @@
             `;
             document.getElementById('cart-bar').classList.add('hidden');
         }
-
         function processPayment(type) {
             toggleMenu();
-            const msg = type === 'Cash' 
+            const msg = type === 'Cash'
                 ? (currentLang === 'ar' ? "✅ تم تأكيد الطلب! سأبلغ النادل بالدفع النقدي." : "✅ Confirmed! Paying Cash.")
                 : (currentLang === 'ar' ? "✅ تم تأكيد الطلب! النادل سيحضر ماكينة البطاقات." : "✅ Confirmed! Waiter bringing POS.");
-            
+           
             addMessage(msg, 'ai');
             cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
             updateCartUI();
-
             setTimeout(() => {
                 sendMessageInternal("Upsell drinks", "upsell");
             }, 2500);
