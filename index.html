@@ -7,109 +7,112 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%); color: white; overscroll-behavior-y: none; }
+        body { font-family: 'Cairo', sans-serif; background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%); color: white; overscroll-behavior-y: none; -webkit-tap-highlight-color: transparent; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .fade-in { animation: fadeIn 0.4s ease; }
-        .slide-up { animation: slideUp 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .typing-dot { animation: bounce 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-        .glass { background: rgba(24, 24, 27, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
-        .shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); background-size: 1000px 100%; animation: shimmer 2s infinite; }
+        .glass { background: rgba(24, 24, 27, 0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.08); }
+        .shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); background-size: 1000px 100%; animation: shimmer 2s infinite; }
         @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
-        .safe-pb { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+        .safe-pb { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
         .safe-pt { padding-top: env(safe-area-inset-top); }
+        button:focus-visible, input:focus-visible { outline: 2px solid #ef4444; outline-offset: 2px; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
     <script>
-        // ✅ YOUR LIVE API URL (REPLACE WITH NEW ONE AFTER REDEPLOY!)
+        // 🔴 YOUR LIVE API URL – UPDATE AFTER REDEPLOY IF NEEDED
         const API_URL = "https://script.google.com/macros/s/AKfycbywJbEy2ZXsyf9lephlmOY-DvWXHHL_xcCRDB8IjAd26oBpq9sYeqOPDyW0rVwjGIEkVA/exec";
     </script>
 
-    <!-- Language Gate -->
-    <div id="lang-gate" class="fixed inset-0 z-[60] bg-black flex flex-col items-center justify-center p-6 space-y-8 fade-in">
-        <div class="text-center space-y-2">
-            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-orange-600 mx-auto flex items-center justify-center text-3xl shadow-2xl shadow-red-500/40 mb-4 animate-bounce">🍣</div>
-            <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">SUSHI GATE</h1>
-            <p class="text-zinc-500 text-sm">Experience Dining 2.0</p>
+    <!-- Language Selection Gate -->
+    <div id="lang-gate" class="fixed inset-0 z-60 bg-black flex flex-col items-center justify-center p-8 space-y-12 fade-in">
+        <div class="text-center space-y-4">
+            <div class="w-28 h-28 rounded-full bg-gradient-to-br from-red-600 to-orange-700 mx-auto flex items-center justify-center text-5xl shadow-2xl shadow-red-600/50 animate-pulse">🍣</div>
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">SUSHI GATE</h1>
+            <p class="text-zinc-500 text-lg">Experience Dining 2.0</p>
         </div>
-        <div class="flex flex-col gap-3 w-full max-w-xs">
-            <button onclick="selectLang('en')" class="glass p-5 rounded-2xl flex items-center justify-between hover:border-red-500/50 transition active:scale-95">
-                <span class="font-bold text-lg">English</span>
-                <span class="text-2xl">🇺🇸</span>
+        <div class="grid grid-cols-1 gap-5 w-full max-w-sm">
+            <button onclick="selectLang('en')" class="glass p-6 rounded-3xl flex items-center justify-between hover:border-red-500/60 transition active:scale-95 shadow-xl">
+                <span class="font-bold text-xl">English</span>
+                <span class="text-4xl">🇺🇸</span>
             </button>
-            <button onclick="selectLang('ar')" class="glass p-5 rounded-2xl flex items-center justify-between hover:border-green-500/50 transition active:scale-95">
-                <span class="font-bold text-lg">عربي</span>
-                <span class="text-2xl">🇪🇬</span>
+            <button onclick="selectLang('ar')" class="glass p-6 rounded-3xl flex items-center justify-between hover:border-green-500/60 transition active:scale-95 shadow-xl">
+                <span class="font-bold text-xl">عربي</span>
+                <span class="text-4xl">🇪🇬</span>
             </button>
         </div>
     </div>
 
     <!-- Header -->
-    <header class="glass p-4 border-b border-zinc-800/50 flex justify-between items-center z-30 sticky top-0 safe-pt">
-        <div class="flex items-center gap-3">
+    <header class="glass p-4 border-b border-zinc-800/50 flex justify-between items-center z-30 sticky top-0 safe-pt shadow-2xl">
+        <div class="flex items-center gap-4">
             <div class="relative">
-                <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-500/50"></div>
-                <div class="absolute inset-0 w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping opacity-75"></div>
+                <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-500/60"></div>
+                <div class="absolute inset-0 w-3 h-3 rounded-full bg-emerald-400 animate-ping opacity-75"></div>
             </div>
-            <h1 class="text-lg font-bold tracking-wider text-zinc-100">SUSHI GATE</h1>
+            <h1 class="text-xl font-bold tracking-wider text-zinc-100">SUSHI GATE</h1>
         </div>
-        <button onclick="toggleMenu()" class="text-sm bg-gradient-to-br from-red-500 to-red-600 px-5 py-2 rounded-full shadow-lg text-white font-bold flex items-center gap-2 active:scale-95">
-            <span class="text-lg">🍱</span>
-            <span id="ui-btn-menu">Menu</span>
+        <button onclick="toggleMenu()" class="bg-gradient-to-br from-red-500 to-orange-600 px-6 py-3 rounded-full shadow-2xl text-white font-bold flex items-center gap-3 active:scale-95 transition">
+            <span class="text-2xl">🍱</span>
+            <span id="ui-btn-menu" class="text-lg">Menu</span>
         </button>
     </header>
 
-    <!-- Chat -->
-    <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 hide-scrollbar pb-24">
-        <div id="chips-container" class="flex gap-2 overflow-x-auto pb-2 px-1 hide-scrollbar mt-2"></div>
+    <!-- Chat Area -->
+    <div id="chat-container" class="flex-1 overflow-y-auto p-5 space-y-5 hide-scrollbar pb-28">
+        <!-- Suggestion Chips appear AFTER greeting -->
+        <div id="chips-container" class="flex flex-wrap gap-3 justify-center mt-4"></div>
     </div>
 
-    <!-- Input -->
-    <div class="fixed bottom-0 w-full glass p-3 border-t border-zinc-800/50 flex gap-3 items-center z-20 safe-pb">
+    <!-- Input Bar -->
+    <div class="fixed bottom-0 left-0 right-0 glass p-4 border-t border-zinc-800/50 flex gap-4 items-center z-20 safe-pb shadow-2xl">
         <input type="text" id="user-input" placeholder="Ask Kenji..."
-            class="flex-1 bg-black/40 border border-zinc-700/50 rounded-2xl px-5 py-3 text-base focus:outline-none focus:border-red-500 placeholder-zinc-500 text-white"
+            class="flex-1 bg-black/50 border border-zinc-700/60 rounded-3xl px-6 py-4 text-base focus:border-red-500 focus:outline-none placeholder-zinc-500 text-white transition"
             onkeypress="if(event.key==='Enter') sendMessage()">
-        <button onclick="sendMessage()" class="bg-gradient-to-br from-red-500 to-orange-600 text-white w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg active:scale-90">
-            <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+        <button onclick="sendMessage()" class="bg-gradient-to-br from-red-500 to-orange-600 w-14 h-14 rounded-3xl flex items-center justify-center shadow-2xl active:scale-90 transition">
+            <svg class="w-6 h-6 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
             </svg>
         </button>
     </div>
 
     <!-- Menu Modal -->
-    <div id="menu-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col justify-end backdrop-blur-sm">
-        <div class="glass w-full h-[92vh] rounded-t-3xl overflow-hidden flex flex-col slide-up shadow-2xl border-t border-zinc-700/50">
-            <div class="p-5 border-b border-zinc-800/50 flex justify-between items-center glass z-10">
-                <h2 class="font-bold text-xl" id="ui-menu-title">Menu</h2>
-                <button onclick="toggleMenu()" class="text-3xl w-10 h-10 rounded-full hover:bg-zinc-800/50">&times;</button>
+    <div id="menu-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col justify-end backdrop-blur-md">
+        <div class="glass w-full max-h-[92vh] rounded-t-3xl overflow-hidden flex flex-col slide-up shadow-2xl">
+            <div class="p-6 border-b border-zinc-800/50 flex justify-between items-center sticky top-0 glass z-10">
+                <h2 class="font-bold text-2xl" id="ui-menu-title">Menu</h2>
+                <button onclick="toggleMenu()" class="text-4xl w-12 h-12 rounded-full hover:bg-zinc-800/60 transition">&times;</button>
             </div>
-            <div id="toast-note" class="hidden absolute top-20 left-4 right-4 glass p-4 rounded-2xl shadow-2xl z-50 text-sm border border-amber-500/20 bg-amber-500/10">
-                <div class="flex gap-3 items-start">
-                    <span class="text-2xl">💡</span>
-                    <div class="flex-1"><p id="toast-text" class="text-zinc-200">...</p></div>
-                    <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="text-zinc-500">✕</button>
+            <div id="toast-note" class="hidden absolute top-24 left-4 right-4 glass p-5 rounded-3xl shadow-2xl z-50 border border-amber-600/30 bg-amber-600/10">
+                <div class="flex gap-4 items-start">
+                    <span class="text-3xl">💡</span>
+                    <div class="flex-1"><p id="toast-text" class="text-zinc-200 leading-relaxed"></p></div>
+                    <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="text-zinc-500 text-2xl">✕</button>
                 </div>
             </div>
-            <div class="p-4 sticky top-0 glass z-10 border-b border-zinc-800/50">
+            <div class="px-5 pb-3">
                 <input type="text" id="menu-search" placeholder="Search menu..." oninput="filterMenu()"
-                    class="w-full bg-black/40 border border-zinc-700/50 rounded-2xl px-5 py-3 focus:border-red-500 placeholder-zinc-500 text-white">
+                    class="w-full bg-black/50 border border-zinc-700/60 rounded-3xl px-6 py-4 focus:border-red-500 placeholder-zinc-500 text-white">
             </div>
-            <div id="menu-content" class="flex-1 overflow-y-auto p-4 space-y-6 pb-32">
-                <div class="text-center text-zinc-500 mt-10 shimmer p-4 rounded-xl">Loading menu...</div>
+            <div id="menu-content" class="flex-1 overflow-y-auto px-5 pb-40 space-y-8">
+                <div class="text-center text-zinc-500 mt-12 shimmer p-6 rounded-2xl">Loading delicious items...</div>
             </div>
-            <div id="cart-bar" class="absolute bottom-0 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 p-5 safe-pb flex justify-between items-center text-white hidden shadow-[0_-8px_30px_rgba(16,185,129,0.3)]" onclick="showCheckout()">
+            <div id="cart-bar" class="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-emerald-500 to-emerald-600 p-6 safe-pb flex justify-between items-center text-white shadow-2xl cursor-pointer" onclick="showCheckout()">
                 <div class="flex flex-col">
-                    <span class="font-bold text-xl" id="cart-total">0</span>
-                    <span class="text-sm text-emerald-100 mt-1" id="cart-count">0 items</span>
+                    <span class="font-bold text-2xl" id="cart-total">0 EGP</span>
+                    <span class="text-sm opacity-90" id="cart-count">0 items</span>
                 </div>
-                <div class="flex items-center gap-3 font-bold text-lg">
-                    <span id="ui-checkout-btn">Checkout</span> <span class="text-xl rtl:rotate-180">➔</span>
+                <div class="flex items-center gap-4 font-bold text-xl">
+                    <span id="ui-checkout-btn">Checkout</span>
+                    <span class="text-3xl rtl:rotate-180">➔</span>
                 </div>
             </div>
         </div>
@@ -118,40 +121,67 @@
     <script>
         let cart = JSON.parse(localStorage.getItem('sushi_cart')) || [];
         let menuData = [];
-        let currentLang = localStorage.getItem('sushi_lang') || null;
+        let currentLang = localStorage.getItem('sushi_lang');
 
         const UI = {
-            en: { menuBtn: "Menu", placeholder: "Ask Kenji...", menuTitle: "Menu", checkout: "Checkout", items: "items", total: "Total", cash: "Cash Payment", cashDesc: "Pay waiter directly", pos: "Card Machine", posDesc: "Waiter will bring POS", waiter: "Waiter will arrive after confirmation", greeting: `Welcome to <span class="text-red-400 font-bold">Sushi Gate</span>. I'm Kenji.<br>Ready to order?` },
-            ar: { menuBtn: "القائمة", placeholder: "اسأل كينجي...", menuTitle: "قائمة الطعام", checkout: "إتمام الطلب", items: "أصناف", total: "الإجمالي", cash: "دفع نقدي", cashDesc: "الدفع عند النادل", pos: "دفع بالبطاقة", posDesc: "سيحضر النادل الماكينة", waiter: "سيصل النادل فور التأكيد", greeting: `أهلاً بك في <span class="text-red-400 font-bold">سوشي جيت</span>. أنا كينجي.<br>جاهز تطلب؟` }
+            en: {
+                menuBtn: "Menu", placeholder: "Ask Kenji...", menuTitle: "Menu", checkout: "Checkout", items: "items", total: "Total",
+                cash: "Cash Payment", cashDesc: "Pay waiter directly", pos: "Card Machine", posDesc: "Waiter will bring POS",
+                waiter: "Waiter will arrive shortly after confirmation", greeting: `Welcome to <span class="text-red-400 font-bold">Sushi Gate</span>.<br>I'm Kenji, your AI waiter.<br>How can I help you today?`,
+                chips: ["📜 Full Menu", "🆕 New to Sushi?", "👨‍🍳 Chef's Picks", "🎎 For Groups", "🌱 Vegetarian Options"]
+            },
+            ar: {
+                menuBtn: "القائمة", placeholder: "اسأل كينجي...", menuTitle: "قائمة الطعام", checkout: "إتمام الطلب", items: "أصناف", total: "الإجمالي",
+                cash: "دفع نقدي", cashDesc: "الدفع عند النادل", pos: "دفع بالبطاقة", posDesc: "سيحضر النادل الماكينة",
+                waiter: "سيصل النادل بعد التأكيد مباشرة", greeting: `أهلاً وسهلاً في <span class="text-red-400 font-bold">سوشي جيت</span>.<br>أنا كينجي، النادل الذكي.<br>ازاي أقدر أساعدك النهاردة؟`,
+                chips: ["📜 القائمة كاملة", "🆕 جديد في السوشي؟", "👨‍🍳 ترشيحات الشيف", "🎎 للمجموعات", "🌱 خيارات نباتية"]
+            }
         };
 
-        if (currentLang) selectLang(currentLang);
+        // Auto-start if language already chosen
+        if (currentLang) {
+            document.getElementById('lang-gate').classList.add('hidden');
+            selectLang(currentLang);
+        }
 
         function selectLang(lang) {
             currentLang = lang;
             localStorage.setItem('sushi_lang', lang);
-            document.getElementById('lang-gate').classList.add('hidden');
             document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('lang-gate').classList.add('hidden');
+
+            // Update all UI texts
             document.getElementById('ui-btn-menu').innerText = UI[lang].menuBtn;
             document.getElementById('user-input').placeholder = UI[lang].placeholder;
             document.getElementById('ui-menu-title').innerText = UI[lang].menuTitle;
             document.getElementById('ui-checkout-btn').innerText = UI[lang].checkout;
             document.getElementById('menu-search').placeholder = lang === 'ar' ? 'ابحث في القائمة...' : 'Search menu...';
+
+            // Greeting + chips below it
             addMessage(UI[lang].greeting, 'ai');
-            renderChips();
+            renderChips(UI[lang].chips);
             updateCartUI();
         }
 
-        function renderChips() {
-            const chips = ['📜 Full Menu', '🆕 New to Sushi?', '👨‍🍳 Chef Choice', '🎎 For Group'];
+        function renderChips(labels) {
             const container = document.getElementById('chips-container');
-            container.innerHTML = chips.map(label => `<button onclick="handleChip('${label}')" class="whitespace-nowrap bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700/50 px-5 py-2.5 rounded-full text-sm active:scale-95 shrink-0 shadow-md">${label}</button>`).join('');
+            container.innerHTML = '';
+            labels.forEach(label => {
+                const btn = document.createElement('button');
+                btn.className = "glass px-6 py-3 rounded-full text-sm font-medium shadow-lg active:scale-95 transition border border-zinc-700/50 hover:border-red-500/50";
+                btn.innerText = label;
+                btn.onclick = () => handleChip(label);
+                container.appendChild(btn);
+            });
         }
 
         function handleChip(label) {
             addMessage(label, 'user');
-            if (label.includes('Menu')) toggleMenu();
-            else sendMessageInternal(label);
+            if (label.includes('Menu') || label.includes('قائمة')) {
+                toggleMenu();
+            } else {
+                sendMessageInternal(label);
+            }
         }
 
         async function sendMessage() {
@@ -160,6 +190,7 @@
             if (!text) return;
             addMessage(text, 'user');
             input.value = '';
+            renderChips([]); // Hide chips while waiting
             if (text.toLowerCase().includes('menu') || text.includes('قائمة')) return toggleMenu();
             sendMessageInternal(text);
         }
@@ -167,37 +198,47 @@
         async function sendMessageInternal(text, context = "chat") {
             const loading = addTypingIndicator();
             try {
-                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'chat', message: text, cart, context, lang: currentLang }) });
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'chat', message: text, cart, context, lang: currentLang })
+                });
                 const data = await res.json();
                 removeMessage(loading);
                 if (data.text) addMessage(data.text, 'ai');
-                renderChips();
+                renderChips(UI[currentLang].chips);
             } catch (e) {
                 removeMessage(loading);
-                addMessage("Connection error. Please try again.", 'ai');
+                addMessage(currentLang === 'ar' ? "مشكلة في الاتصال، جرب تاني." : "Connection issue. Please try again.", 'ai');
             }
         }
 
         function addMessage(text, sender) {
             const div = document.createElement('div');
-            div.className = `flex items-end gap-2 fade-in ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
-            const bubble = sender === 'ai'
-                ? 'glass p-3 rounded-2xl max-w-[85%] text-sm rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none'
-                : 'bg-gradient-to-br from-red-500 to-orange-600 text-white p-3 rounded-2xl max-w-[85%] text-sm rounded-br-none rtl:rounded-br-2xl rtl:rounded-bl-none';
-            const avatar = sender === 'ai' ? '<div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center text-xs font-bold shadow-lg">AI</div>' : '';
-            div.innerHTML = sender === 'ai' ? `${avatar}<div class="${bubble}">${text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')}</div>` : `<div class="${bubble}">${text}</div>`;
+            div.className = `flex items-end gap-3 fade-in ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+            const bubbleClass = sender === 'ai'
+                ? 'glass p-4 rounded-3xl max-w-[85%] text-base leading-relaxed rounded-tl-none rtl:rounded-tl-3xl rtl:rounded-tr-none shadow-xl border border-white/5'
+                : 'bg-gradient-to-br from-red-500 to-orange-600 p-4 rounded-3xl max-w-[85%] text-base leading-relaxed rounded-br-none rtl:rounded-br-3xl rtl:rounded-bl-none shadow-xl text-white';
+            const avatar = sender === 'ai' ? '<div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-orange-700 flex items-center justify-center text-sm font-bold shadow-2xl">K</div>' : '';
+            div.innerHTML = sender === 'ai'
+                ? `${avatar}<div class="${bubbleClass}">${text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>')}</div>`
+                : `<div class="${bubbleClass}">${text}</div>`;
             document.getElementById('chat-container').appendChild(div);
-            div.scrollIntoView({ behavior: 'smooth' });
+            div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         function addTypingIndicator() {
             const id = 'typing-' + Date.now();
             const div = document.createElement('div');
             div.id = id;
-            div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-xs font-bold">AI</div><div class="glass p-3 rounded-2xl flex gap-1.5 rounded-tl-none"><div class="w-1.5 h-1.5 bg-red-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-orange-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-red-400 rounded-full typing-dot"></div></div>`;
-            div.className = "flex items-center gap-2 fade-in";
+            div.className = "flex items-center gap-3 fade-in";
+            div.innerHTML = `<div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-orange-700 flex items-center justify-center text-sm font-bold shadow-2xl">K</div>
+                             <div class="glass p-4 rounded-3xl flex gap-2 rounded-tl-none">
+                                 <div class="w-2 h-2 bg-red-400 rounded-full typing-dot"></div>
+                                 <div class="w-2 h-2 bg-orange-400 rounded-full typing-dot"></div>
+                                 <div class="w-2 h-2 bg-red-400 rounded-full typing-dot"></div>
+                             </div>`;
             document.getElementById('chat-container').appendChild(div);
-            div.scrollIntoView();
+            div.scrollIntoView({ behavior: 'smooth' });
             return id;
         }
 
@@ -209,7 +250,7 @@
         async function toggleMenu() {
             const modal = document.getElementById('menu-modal');
             modal.classList.toggle('hidden');
-            if (menuData.length === 0 && !modal.classList.contains('hidden')) await loadMenu();
+            if (!modal.classList.contains('hidden') && menuData.length === 0) await loadMenu();
             else if (!modal.classList.contains('hidden')) renderMenu();
         }
 
@@ -220,12 +261,12 @@
                 menuData = data.menu || [];
                 renderMenu();
             } catch (e) {
-                document.getElementById('menu-content').innerHTML = '<div class="text-center text-red-400 p-8">Failed to load menu. Check connection.</div>';
+                document.getElementById('menu-content').innerHTML = '<div class="text-center text-red-400 p-10">Failed to load menu.<br>Please check your connection.</div>';
             }
         }
 
-        function renderMenu(data = menuData) {
-            const groups = data.reduce((acc, item) => {
+        function renderMenu(filterData = menuData) {
+            const groups = filterData.reduce((acc, item) => {
                 const cat = item.cat || 'Other';
                 acc[cat] = acc[cat] || [];
                 acc[cat].push(item);
@@ -234,47 +275,53 @@
 
             let html = '';
             for (const cat in groups) {
-                html += `<h3 class="text-lg font-bold mb-4 text-zinc-300 sticky top-0 glass p-3 rounded-xl">${cat}</h3>`;
-                html += groups[cat].map(item => {
+                html += `<div class="mb-8">
+                    <h3 class="text-xl font-bold mb-5 text-zinc-300 sticky top-0 glass py-4 px-5 rounded-2xl backdrop-blur">${cat}</h3>
+                    <div class="space-y-4">`;
+                groups[cat].forEach(item => {
                     const qty = cart.filter(c => c.id === item.id).length;
-                    const img = item.image ? `<img src="${item.image}" class="w-full h-full object-cover rounded-xl" onerror="this.style.display='none';this.nextSibling.style.display='flex'">` : '';
-                    return `
-                    <div class="glass p-4 rounded-2xl flex justify-between items-center border border-zinc-800/50 mb-3">
-                        <div class="flex items-center gap-4">
-                            <div class="w-20 h-20 rounded-xl bg-zinc-800/50 flex items-center justify-center text-4xl shrink-0">${img}<div class="hidden w-full h-full items-center justify-center">${item.emoji}</div></div>
-                            <div>
-                                <div class="font-bold">${item.name}</div>
-                                <div class="text-red-400 font-bold">${item.price} EGP</div>
-                                ${qty ? `<div class="text-emerald-400 text-xs">In cart: ${qty}</div>` : ''}
+                    const img = item.image ? `<img src="${item.image}" loading="lazy" class="w-full h-full object-cover rounded-2xl" onerror="this.style.display='none'; this.nextSibling.style.display='flex'">` : '';
+                    html += `
+                    <div class="glass p-5 rounded-3xl flex justify-between items-center border border-zinc-800/50 shadow-xl">
+                        <div class="flex items-center gap-5 flex-1 min-w-0">
+                            <div class="w-24 h-24 rounded-2xl bg-zinc-800/60 flex items-center justify-center text-5xl shrink-0 overflow-hidden">
+                                ${img}
+                                <div class="hidden w-full h-full items-center justify-center">${item.emoji}</div>
+                            </div>
+                            <div class="min-w-0">
+                                <div class="font-bold text-lg truncate">${item.name}</div>
+                                <div class="text-red-400 font-bold text-lg mt-1">${item.price} EGP</div>
+                                ${qty ? `<div class="text-emerald-400 text-sm mt-2">In cart: ${qty}</div>` : ''}
                             </div>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="explainItem('${item.name}')" class="w-10 h-10 rounded-xl border border-zinc-700/50 glass text-zinc-400 active:text-white">?</button>
-                            <button onclick="removeFromCart('${item.id}')" class="w-10 h-10 rounded-xl border border-zinc-700/50 glass text-red-400 ${qty?'':'hidden'}">-</button>
-                            <button onclick="addToCart('${item.id}')" class="w-10 h-10 rounded-xl border border-zinc-700/50 glass text-green-400 text-xl active:bg-green-500/20">+</button>
+                        <div class="flex gap-3 shrink-0">
+                            <button onclick="explainItem('${item.name}')" class="w-12 h-12 rounded-2xl glass border border-zinc-700/50 text-zinc-400 hover:text-white active:scale-95 transition">?</button>
+                            <button onclick="removeFromCart('${item.id}')" class="w-12 h-12 rounded-2xl glass border border-zinc-700/50 text-red-400 ${qty ? '' : 'hidden'} active:scale-95 transition">-</button>
+                            <button onclick="addToCart('${item.id}')" class="w-12 h-12 rounded-2xl glass border border-zinc-700/50 text-green-400 text-2xl active:scale-95 transition">+</button>
                         </div>
                     </div>`;
-                }).join('');
+                });
+                html += `</div></div>`;
             }
-            document.getElementById('menu-content').innerHTML = html || '<div class="text-center text-zinc-500">No items found.</div>';
+            document.getElementById('menu-content').innerHTML = html || '<div class="text-center text-zinc-500 py-20">No items found</div>';
             updateCartUI();
         }
 
         function filterMenu() {
             const term = document.getElementById('menu-search').value.toLowerCase();
-            const filtered = menuData.filter(item => item.name.toLowerCase().includes(term) || (item.desc && item.desc.toLowerCase().includes(term)));
+            const filtered = menuData.filter(i => i.name.toLowerCase().includes(term) || (i.desc && i.desc.toLowerCase().includes(term)));
             renderMenu(filtered);
         }
 
         async function explainItem(name) {
             const toast = document.getElementById('toast-note');
-            document.getElementById('toast-text').innerText = currentLang === 'ar' ? "جاري تحميل الوصف..." : "Loading description...";
+            document.getElementById('toast-text').innerText = currentLang === 'ar' ? "جاري تحميل الوصف..." : "Fetching description...";
             toast.classList.remove('hidden');
             try {
                 const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'chat', message: `Describe ${name}`, context: 'explain', lang: currentLang }) });
                 const data = await res.json();
                 document.getElementById('toast-text').innerHTML = data.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                setTimeout(() => toast.classList.add('hidden'), 7000);
+                setTimeout(() => toast.classList.add('hidden'), 8000);
             } catch (e) {
                 toast.classList.add('hidden');
             }
@@ -285,8 +332,8 @@
             if (item) {
                 cart.push(item);
                 localStorage.setItem('sushi_cart', JSON.stringify(cart));
-                updateCartUI();
                 renderMenu();
+                updateCartUI();
             }
         }
 
@@ -295,8 +342,8 @@
             if (idx > -1) {
                 cart.splice(idx, 1);
                 localStorage.setItem('sushi_cart', JSON.stringify(cart));
-                updateCartUI();
                 renderMenu();
+                updateCartUI();
             }
         }
 
@@ -318,26 +365,39 @@
             let list = '';
             for (const id in grouped) {
                 const item = menuData.find(i => i.id === id);
-                if (item) list += `<div class="flex justify-between text-sm mb-2"><span>${item.name} ×${grouped[id]}</span><span>${item.price * grouped[id]} EGP</span></div>`;
+                if (item) list += `<div class="flex justify-between py-3 border-b border-zinc-700/50"><span>${item.name} ×${grouped[id]}</span><span>${item.price * grouped[id]} EGP</span></div>`;
             }
+
             document.getElementById('ui-menu-title').innerText = UI[currentLang].checkout;
             document.getElementById('menu-content').innerHTML = `
-                <div class="space-y-6 p-4">
-                    <div class="glass p-6 rounded-2xl border border-zinc-800/50 text-center">
-                        <div class="text-zinc-400 text-sm">${UI[currentLang].total}</div>
-                        <div class="text-4xl font-bold text-emerald-400">${sum} EGP</div>
-                        <div class="text-xs text-zinc-500 mt-2">${cart.length} ${UI[currentLang].items}</div>
-                        <div class="border-t border-zinc-700/50 mt-4 pt-4 text-left">${list}</div>
+                <div class="p-6 space-y-8">
+                    <div class="glass p-8 rounded-3xl border border-zinc-800/50 text-center">
+                        <div class="text-zinc-400 text-lg">${UI[currentLang].total}</div>
+                        <div class="text-5xl font-bold text-emerald-400 my-4">${sum} EGP</div>
+                        <div class="text-zinc-500">${cart.length} ${UI[currentLang].items}</div>
+                        <div class="mt-6 text-left">${list}</div>
                     </div>
-                    <div class="space-y-3">
-                        <button onclick="processPayment('Cash')" class="w-full glass p-5 rounded-2xl flex items-center justify-between active:bg-zinc-800">
-                            <div class="flex items-center gap-3"><span class="text-3xl">💵</span><div><div class="font-bold">${UI[currentLang].cash}</div><div class="text-xs text-zinc-500">${UI[currentLang].cashDesc}</div></div></div>
+                    <div class="space-y-5">
+                        <button onclick="processPayment('Cash')" class="w-full glass p-7 rounded-3xl flex items-center justify-between active:scale-95 transition shadow-xl">
+                            <div class="flex items-center gap-5">
+                                <span class="text-4xl">💵</span>
+                                <div>
+                                    <div class="font-bold text-xl">${UI[currentLang].cash}</div>
+                                    <div class="text-sm text-zinc-400">${UI[currentLang].cashDesc}</div>
+                                </div>
+                            </div>
                         </button>
-                        <button onclick="processPayment('POS')" class="w-full glass p-5 rounded-2xl flex items-center justify-between active:bg-zinc-800">
-                            <div class="flex items-center gap-3"><span class="text-3xl">💳</span><div><div class="font-bold">${UI[currentLang].pos}</div><div class="text-xs text-zinc-500">${UI[currentLang].posDesc}</div></div></div>
+                        <button onclick="processPayment('POS')" class="w-full glass p-7 rounded-3xl flex items-center justify-between active:scale-95 transition shadow-xl">
+                            <div class="flex items-center gap-5">
+                                <span class="text-4xl">💳</span>
+                                <div>
+                                    <div class="font-bold text-xl">${UI[currentLang].pos}</div>
+                                    <div class="text-sm text-zinc-400">${UI[currentLang].posDesc}</div>
+                                </div>
+                            </div>
                         </button>
                     </div>
-                    <div class="text-center text-xs text-zinc-500 p-4 glass rounded-xl border border-zinc-800/50">
+                    <div class="text-center text-sm text-zinc-500 p-6 glass rounded-3xl border border-zinc-800/50">
                         ⏱️ ${UI[currentLang].waiter}
                     </div>
                 </div>`;
@@ -347,13 +407,13 @@
         function processPayment(type) {
             toggleMenu();
             const msg = type === 'Cash'
-                ? (currentLang === 'ar' ? "✅ تم تأكيد الطلب! الدفع كاش عند النادل." : "✅ Order confirmed! Paying cash.")
-                : (currentLang === 'ar' ? "✅ تم التأكيد! النادل جاي بالماكينة." : "✅ Confirmed! Waiter bringing card machine.");
+                ? (currentLang === 'ar' ? "✅ تم تأكيد الطلب! الدفع نقدي عند النادل." : "✅ Order confirmed! Paying cash.")
+                : (currentLang === 'ar' ? "✅ تم التأكيد! النادل قادم بالماكينة." : "✅ Confirmed! Waiter bringing card machine.");
             addMessage(msg, 'ai');
             cart = [];
             localStorage.setItem('sushi_cart', JSON.stringify(cart));
             updateCartUI();
-            setTimeout(() => sendMessageInternal("Any drinks to complete your meal?", "upsell"), 3000);
+            setTimeout(() => sendMessageInternal("Would you like a drink to complete your meal?", "upsell"), 3000);
         }
     </script>
 </body>
