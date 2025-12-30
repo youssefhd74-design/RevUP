@@ -7,61 +7,31 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* BASE STYLES */
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
-            color: white;
-            overscroll-behavior-y: none;
-            -webkit-tap-highlight-color: transparent; /* Prevent tap highlights on mobile */
-        }
-       
-        /* HIDE SCROLLBARS BUT ALLOW SCROLLING */
+        body { font-family: 'Cairo', sans-serif; background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%); color: white; overscroll-behavior-y: none; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* ANIMATIONS */
-        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .slide-up { animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .fade-in { animation: fadeIn 0.4s ease; }
+        .slide-up { animation: slideUp 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-       
-        /* TYPING INDICATOR */
         .typing-dot { animation: bounce 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-       
-        /* GLASS EFFECTS */
-        .glass {
-            background: rgba(24, 24, 27, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-       
-        /* SHIMMER LOADER */
+        .glass { background: rgba(24, 24, 27, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); background-size: 1000px 100%; animation: shimmer 2s infinite; }
         @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
-        .shimmer {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            background-size: 1000px 100%;
-            animation: shimmer 2s infinite;
-        }
-        
-        /* SAFE AREA SPACING */
-        .safe-pb { padding-bottom: max(1rem, env(safe-area-inset-bottom)); } /* Improved padding */
+        .safe-pb { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
         .safe-pt { padding-top: env(safe-area-inset-top); }
-        
-        /* ACCESSIBILITY */
-        button, input { outline: none; } /* But add focus styles */
-        button:focus-visible, input:focus-visible { ring-2 ring-red-500; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
     <script>
-        // 🔴🔴🔴 PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE 🔴🔴🔴
+        // ✅ YOUR LIVE API URL (REPLACE WITH NEW ONE AFTER REDEPLOY!)
         const API_URL = "https://script.google.com/macros/s/AKfycbywJbEy2ZXsyf9lephlmOY-DvWXHHL_xcCRDB8IjAd26oBpq9sYeqOPDyW0rVwjGIEkVA/exec";
     </script>
+
+    <!-- Language Gate -->
     <div id="lang-gate" class="fixed inset-0 z-[60] bg-black flex flex-col items-center justify-center p-6 space-y-8 fade-in">
         <div class="text-center space-y-2">
             <div class="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-orange-600 mx-auto flex items-center justify-center text-3xl shadow-2xl shadow-red-500/40 mb-4 animate-bounce">🍣</div>
@@ -69,17 +39,19 @@
             <p class="text-zinc-500 text-sm">Experience Dining 2.0</p>
         </div>
         <div class="flex flex-col gap-3 w-full max-w-xs">
-            <button onclick="selectLang('en')" class="glass p-5 rounded-2xl flex items-center justify-between hover:border-red-500/50 hover:bg-zinc-800 transition active:scale-95">
+            <button onclick="selectLang('en')" class="glass p-5 rounded-2xl flex items-center justify-between hover:border-red-500/50 transition active:scale-95">
                 <span class="font-bold text-lg">English</span>
                 <span class="text-2xl">🇺🇸</span>
             </button>
-            <button onclick="selectLang('ar')" class="glass p-5 rounded-2xl flex items-center justify-between hover:border-green-500/50 hover:bg-zinc-800 transition active:scale-95">
+            <button onclick="selectLang('ar')" class="glass p-5 rounded-2xl flex items-center justify-between hover:border-green-500/50 transition active:scale-95">
                 <span class="font-bold text-lg">عربي</span>
                 <span class="text-2xl">🇪🇬</span>
             </button>
         </div>
     </div>
-    <header class="glass p-4 border-b border-zinc-800/50 flex justify-between items-center z-30 sticky top-0 w-full shadow-lg safe-pt">
+
+    <!-- Header -->
+    <header class="glass p-4 border-b border-zinc-800/50 flex justify-between items-center z-30 sticky top-0 safe-pt">
         <div class="flex items-center gap-3">
             <div class="relative">
                 <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-500/50"></div>
@@ -87,426 +59,302 @@
             </div>
             <h1 class="text-lg font-bold tracking-wider text-zinc-100">SUSHI GATE</h1>
         </div>
-        <button onclick="toggleMenu()" class="text-sm bg-gradient-to-br from-red-500 to-red-600 px-5 py-2 rounded-full shadow-lg shadow-red-500/20 text-white font-bold flex items-center gap-2 active:scale-95 transition-transform">
+        <button onclick="toggleMenu()" class="text-sm bg-gradient-to-br from-red-500 to-red-600 px-5 py-2 rounded-full shadow-lg text-white font-bold flex items-center gap-2 active:scale-95">
             <span class="text-lg">🍱</span>
             <span id="ui-btn-menu">Menu</span>
         </button>
     </header>
+
+    <!-- Chat -->
     <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 hide-scrollbar pb-24">
-        <div id="chips-container" class="flex gap-2 overflow-x-auto pb-2 px-1 fade-in hide-scrollbar mt-2"></div>
+        <div id="chips-container" class="flex gap-2 overflow-x-auto pb-2 px-1 hide-scrollbar mt-2"></div>
     </div>
+
+    <!-- Input -->
     <div class="fixed bottom-0 w-full glass p-3 border-t border-zinc-800/50 flex gap-3 items-center z-20 safe-pb">
-        <input type="text" id="user-input" placeholder="Ask..."
-            class="flex-1 bg-black/40 border border-zinc-700/50 rounded-2xl px-5 py-3 text-base focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-500 text-white"
-            onkeypress="handleEnter(event)">
-       
-        <button onclick="sendMessage()" class="bg-gradient-to-br from-red-500 to-orange-600 text-white w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+        <input type="text" id="user-input" placeholder="Ask Kenji..."
+            class="flex-1 bg-black/40 border border-zinc-700/50 rounded-2xl px-5 py-3 text-base focus:outline-none focus:border-red-500 placeholder-zinc-500 text-white"
+            onkeypress="if(event.key==='Enter') sendMessage()">
+        <button onclick="sendMessage()" class="bg-gradient-to-br from-red-500 to-orange-600 text-white w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg active:scale-90">
             <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
             </svg>
         </button>
     </div>
-    <div id="menu-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col justify-end fade-in backdrop-blur-sm">
-        <div class="glass w-full h-[92vh] rounded-t-3xl overflow-hidden flex flex-col slide-up relative shadow-2xl border-t border-zinc-700/50">
-           
+
+    <!-- Menu Modal -->
+    <div id="menu-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col justify-end backdrop-blur-sm">
+        <div class="glass w-full h-[92vh] rounded-t-3xl overflow-hidden flex flex-col slide-up shadow-2xl border-t border-zinc-700/50">
             <div class="p-5 border-b border-zinc-800/50 flex justify-between items-center glass z-10">
                 <h2 class="font-bold text-xl" id="ui-menu-title">Menu</h2>
-                <button onclick="toggleMenu()" class="text-zinc-400 text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-800/50 transition">&times;</button>
+                <button onclick="toggleMenu()" class="text-3xl w-10 h-10 rounded-full hover:bg-zinc-800/50">&times;</button>
             </div>
-            <div id="toast-note" class="hidden absolute top-20 left-4 right-4 glass p-4 rounded-2xl shadow-2xl z-50 text-sm fade-in border border-amber-500/20 bg-amber-500/10">
+            <div id="toast-note" class="hidden absolute top-20 left-4 right-4 glass p-4 rounded-2xl shadow-2xl z-50 text-sm border border-amber-500/20 bg-amber-500/10">
                 <div class="flex gap-3 items-start">
                     <span class="text-2xl">💡</span>
-                    <div class="flex-1">
-                        <p id="toast-text" class="leading-tight text-zinc-200 mt-1">...</p>
-                    </div>
-                    <button onclick="document.getElementById('toast-note').classList.add('hidden')" class="text-zinc-500 p-2">✕</button>
+                    <div class="flex-1"><p id="toast-text" class="text-zinc-200">...</p></div>
+                    <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="text-zinc-500">✕</button>
                 </div>
             </div>
             <div class="p-4 sticky top-0 glass z-10 border-b border-zinc-800/50">
                 <input type="text" id="menu-search" placeholder="Search menu..." oninput="filterMenu()"
-                    class="w-full bg-black/40 border border-zinc-700/50 rounded-2xl px-5 py-3 text-base focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-500 text-white">
+                    class="w-full bg-black/40 border border-zinc-700/50 rounded-2xl px-5 py-3 focus:border-red-500 placeholder-zinc-500 text-white">
             </div>
-            <div id="menu-content" class="flex-1 overflow-y-auto p-4 space-y-3 pb-32 relative">
-                <div class="text-center text-zinc-500 mt-10 shimmer p-4 rounded-xl">Loading...</div>
+            <div id="menu-content" class="flex-1 overflow-y-auto p-4 space-y-6 pb-32">
+                <div class="text-center text-zinc-500 mt-10 shimmer p-4 rounded-xl">Loading menu...</div>
             </div>
-            <div id="cart-bar" class="absolute bottom-0 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 p-5 safe-pb flex justify-between items-center text-white hidden cursor-pointer shadow-[0_-8px_30px_rgba(16,185,129,0.3)] active:scale-[0.98] transition-transform" onclick="showCheckout()">
+            <div id="cart-bar" class="absolute bottom-0 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 p-5 safe-pb flex justify-between items-center text-white hidden shadow-[0_-8px_30px_rgba(16,185,129,0.3)]" onclick="showCheckout()">
                 <div class="flex flex-col">
-                    <span class="font-bold text-xl leading-none" id="cart-total">0</span>
-                    <span class="text-sm text-emerald-100 mt-1" id="cart-count">0</span>
+                    <span class="font-bold text-xl" id="cart-total">0</span>
+                    <span class="text-sm text-emerald-100 mt-1" id="cart-count">0 items</span>
                 </div>
                 <div class="flex items-center gap-3 font-bold text-lg">
-                    <span id="ui-checkout-btn">Checkout</span>
-                    <span class="text-xl rtl:rotate-180">➔</span>
+                    <span id="ui-checkout-btn">Checkout</span> <span class="text-xl rtl:rotate-180">➔</span>
                 </div>
             </div>
         </div>
     </div>
+
     <script>
-        let cart = JSON.parse(localStorage.getItem('cart')) || []; // Persist cart
+        let cart = JSON.parse(localStorage.getItem('sushi_cart')) || [];
         let menuData = [];
-        let currentLang = localStorage.getItem('lang') || null;
-        let preferences = { vegetarian: false, allergies: [] }; // New: User preferences
-        
-        // --- DICTIONARY (Expanded) ---
+        let currentLang = localStorage.getItem('sushi_lang') || null;
+
         const UI = {
-            en: {
-                menuBtn: "Menu",
-                placeholder: "Ask Kenji...",
-                menuTitle: "Menu",
-                checkout: "Checkout",
-                items: "items",
-                total: "Total",
-                cash: "Cash Payment",
-                cashDesc: "Pay waiter directly",
-                pos: "Card Machine",
-                posDesc: "Waiter will bring POS",
-                waiter: "Waiter will arrive after you confirm",
-                greeting: `Welcome to <span class="text-red-400 font-bold">Sushi Gate</span>. I'm Kenji.<br>Ready to order?`,
-                chips: [
-                    { label: '📜 Full Menu', val: 'menu' },
-                    { label: '🆕 New to Sushi?', val: 'new' },
-                    { label: '👨‍🍳 Chef Choice', val: 'chef' },
-                    { label: '🎎 Couple/Group', val: 'group' },
-                    { label: '🌱 Vegetarian?', val: 'veg' } // New chip
-                ]
-            },
-            ar: {
-                menuBtn: "القائمة",
-                placeholder: "اكتب طلبك...",
-                menuTitle: "قائمة الطعام",
-                checkout: "إتمام الطلب",
-                items: "أصناف",
-                total: "الإجمالي",
-                cash: "دفع نقدي (كاش)",
-                cashDesc: "الدفع عند النادل",
-                pos: "دفع بالبطاقة",
-                posDesc: "سيحضر النادل الماكينة",
-                waiter: "سيصل النادل فور التأكيد",
-                greeting: `أهلاً بك في <span class="text-red-400 font-bold">سوشي جيت</span>. أنا كينجي.<br>جاهز تطلب؟`,
-                chips: [
-                    { label: '📜 القائمة كاملة', val: 'menu' },
-                    { label: '🆕 جديد في السوشي؟', val: 'new' },
-                    { label: '👨‍🍳 ترشيح الشيف', val: 'chef' },
-                    { label: '🎎 أكيلة (مجموعة)', val: 'group' },
-                    { label: '🌱 نباتي؟', val: 'veg' } // New chip
-                ]
-            }
+            en: { menuBtn: "Menu", placeholder: "Ask Kenji...", menuTitle: "Menu", checkout: "Checkout", items: "items", total: "Total", cash: "Cash Payment", cashDesc: "Pay waiter directly", pos: "Card Machine", posDesc: "Waiter will bring POS", waiter: "Waiter will arrive after confirmation", greeting: `Welcome to <span class="text-red-400 font-bold">Sushi Gate</span>. I'm Kenji.<br>Ready to order?` },
+            ar: { menuBtn: "القائمة", placeholder: "اسأل كينجي...", menuTitle: "قائمة الطعام", checkout: "إتمام الطلب", items: "أصناف", total: "الإجمالي", cash: "دفع نقدي", cashDesc: "الدفع عند النادل", pos: "دفع بالبطاقة", posDesc: "سيحضر النادل الماكينة", waiter: "سيصل النادل فور التأكيد", greeting: `أهلاً بك في <span class="text-red-400 font-bold">سوشي جيت</span>. أنا كينجي.<br>جاهز تطلب؟` }
         };
-        const chatContainer = document.getElementById('chat-container');
-        const chipsContainer = document.getElementById('chips-container');
-        const menuContent = document.getElementById('menu-content');
-        
-        // Auto-select language if persisted
-        if (currentLang) {
-            selectLang(currentLang);
-            document.getElementById('lang-gate').classList.add('hidden');
-        }
-        
-        // --- LANGUAGE LOGIC ---
+
+        if (currentLang) selectLang(currentLang);
+
         function selectLang(lang) {
             currentLang = lang;
-            localStorage.setItem('lang', lang);
+            localStorage.setItem('sushi_lang', lang);
             document.getElementById('lang-gate').classList.add('hidden');
-           
-            // Handle Direction & Mirroring
-            if (lang === 'ar') {
-                document.body.dir = "rtl";
-            } else {
-                document.body.dir = "ltr";
-            }
-            // Update Static Labels
+            document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
             document.getElementById('ui-btn-menu').innerText = UI[lang].menuBtn;
             document.getElementById('user-input').placeholder = UI[lang].placeholder;
             document.getElementById('ui-menu-title').innerText = UI[lang].menuTitle;
             document.getElementById('ui-checkout-btn').innerText = UI[lang].checkout;
-            document.getElementById('menu-search').placeholder = lang === 'ar' ? 'بحث في القائمة...' : 'Search menu...';
+            document.getElementById('menu-search').placeholder = lang === 'ar' ? 'ابحث في القائمة...' : 'Search menu...';
             addMessage(UI[lang].greeting, 'ai');
-            renderChips(UI[lang].chips);
-            updateCartUI(); // Refresh cart UI
+            renderChips();
+            updateCartUI();
         }
-        function renderChips(options) {
-            chipsContainer.innerHTML = '';
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "whitespace-nowrap bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700/50 px-5 py-2.5 rounded-full text-sm active:scale-95 transition-all shrink-0 fade-in font-medium shadow-md";
-                btn.innerText = opt.label;
-                btn.onclick = () => handleChipClick(opt);
-                chipsContainer.appendChild(btn);
-            });
+
+        function renderChips() {
+            const chips = ['📜 Full Menu', '🆕 New to Sushi?', '👨‍🍳 Chef Choice', '🎎 For Group'];
+            const container = document.getElementById('chips-container');
+            container.innerHTML = chips.map(label => `<button onclick="handleChip('${label}')" class="whitespace-nowrap bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700/50 px-5 py-2.5 rounded-full text-sm active:scale-95 shrink-0 shadow-md">${label}</button>`).join('');
         }
-        function handleChipClick(opt) {
-            addMessage(opt.label, 'user');
-            if (opt.val === 'menu') {
-                toggleMenu();
-                addMessage(currentLang === 'ar' ? "تفضل القائمة." : "Here is the menu.", 'ai');
-                renderChips(UI[currentLang].chips);
-            }
-            else if (opt.val === 'new') {
-                const loading = addTypingIndicator();
-                setTimeout(() => {
-                    removeMessage(loading);
-                    const msg = currentLang === 'ar'
-                        ? "للمبتدئين، أرشح الأصناف المطهية مثل **Volcano Roll** أو **Shrimp Tempura**."
-                        : "For beginners, try cooked items like **Volcano Roll** or **Shrimp Tempura**.";
-                    addMessage(msg, 'ai');
-                    renderChips([{ label: currentLang === 'ar' ? '🔙 عودة' : '🔙 Back', val: 'reset' }]);
-                }, 800);
-            }
-            else if (opt.val === 'chef') { sendMessageInternal(currentLang === 'ar' ? "ترشيحات الشيف؟" : "Chef's recommendation?"); }
-            else if (opt.val === 'group') { sendMessageInternal(currentLang === 'ar' ? "اقتراحات لمجموعة؟" : "Suggestion for a group?"); }
-            else if (opt.val === 'veg') {
-                preferences.vegetarian = true;
-                sendMessageInternal(currentLang === 'ar' ? "اقتراحات نباتية؟" : "Vegetarian suggestions?", 'recommend');
-            }
-            else if (opt.val === 'reset') { renderChips(UI[currentLang].chips); }
+
+        function handleChip(label) {
+            addMessage(label, 'user');
+            if (label.includes('Menu')) toggleMenu();
+            else sendMessageInternal(label);
         }
-        // --- CHAT LOGIC ---
+
         async function sendMessage() {
             const input = document.getElementById('user-input');
             const text = input.value.trim();
             if (!text) return;
-            renderChips([]);
             addMessage(text, 'user');
             input.value = '';
-            if (text.toLowerCase().includes('menu') || text.includes('منيو')) { toggleMenu(); return; }
+            if (text.toLowerCase().includes('menu') || text.includes('قائمة')) return toggleMenu();
             sendMessageInternal(text);
         }
+
         async function sendMessageInternal(text, context = "chat") {
-            const loadingId = addTypingIndicator();
+            const loading = addTypingIndicator();
             try {
-                const payload = { action: 'chat', message: text, cart: cart, context: context, lang: currentLang };
-                if (context === 'recommend') payload.action = 'recommend'; // Use new endpoint
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'chat', message: text, cart, context, lang: currentLang }) });
                 const data = await res.json();
-                removeMessage(loadingId);
+                removeMessage(loading);
                 if (data.text) addMessage(data.text, 'ai');
-                if (data.openMenu) toggleMenu();
-                if (data.items) { // Render recommended items in menu
-                    menuData = data.items;
-                    toggleMenu();
-                    renderMenu();
-                }
-                if(chipsContainer.children.length === 0) renderChips(UI[currentLang].chips);
+                renderChips();
             } catch (e) {
-                removeMessage(loadingId);
-                addMessage(currentLang === 'ar' ? "خطأ في الاتصال." : "Connection error.", 'ai');
+                removeMessage(loading);
+                addMessage("Connection error. Please try again.", 'ai');
             }
         }
+
         function addMessage(text, sender) {
             const div = document.createElement('div');
-            const alignClass = sender === 'user' ? 'justify-end' : 'justify-start';
-            div.className = `flex items-end gap-2 fade-in ${alignClass}`;
-           
-            const avatar = sender === 'ai' ? `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center text-xs shrink-0 text-white font-bold shadow-lg ring-1 ring-white/10">AI</div>` : ``;
-            const formatted = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
-           
-            const aiBubble = "glass text-zinc-100 p-3 rounded-2xl text-sm max-w-[85%] shadow-md leading-relaxed rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none border-b border-white/5";
-            const userBubble = "bg-gradient-to-br from-red-500 to-orange-600 text-white p-3 rounded-2xl text-sm max-w-[85%] shadow-md rounded-br-none rtl:rounded-br-2xl rtl:rounded-bl-none";
-            const bubbleClass = sender === 'ai' ? aiBubble : userBubble;
-            div.innerHTML = sender === 'ai' ? `${avatar}<div class="${bubbleClass}">${formatted}</div>` : `<div class="${bubbleClass}">${formatted}</div>`;
-            chatContainer.appendChild(div);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            div.className = `flex items-end gap-2 fade-in ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+            const bubble = sender === 'ai'
+                ? 'glass p-3 rounded-2xl max-w-[85%] text-sm rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none'
+                : 'bg-gradient-to-br from-red-500 to-orange-600 text-white p-3 rounded-2xl max-w-[85%] text-sm rounded-br-none rtl:rounded-br-2xl rtl:rounded-bl-none';
+            const avatar = sender === 'ai' ? '<div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center text-xs font-bold shadow-lg">AI</div>' : '';
+            div.innerHTML = sender === 'ai' ? `${avatar}<div class="${bubble}">${text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')}</div>` : `<div class="${bubble}">${text}</div>`;
+            document.getElementById('chat-container').appendChild(div);
+            div.scrollIntoView({ behavior: 'smooth' });
         }
+
         function addTypingIndicator() {
-            const id = 'loading-' + Date.now();
+            const id = 'typing-' + Date.now();
             const div = document.createElement('div');
             div.id = id;
-            div.className = "flex items-center gap-2 p-4 fade-in";
-            const bubbleClass = "glass p-3 rounded-2xl flex gap-1.5 rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none";
-           
-            div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-xs text-white font-bold shadow-lg">AI</div><div class="${bubbleClass}"><div class="w-1.5 h-1.5 bg-red-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-orange-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-red-400 rounded-full typing-dot"></div></div>`;
-            chatContainer.appendChild(div);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-xs font-bold">AI</div><div class="glass p-3 rounded-2xl flex gap-1.5 rounded-tl-none"><div class="w-1.5 h-1.5 bg-red-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-orange-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-red-400 rounded-full typing-dot"></div></div>`;
+            div.className = "flex items-center gap-2 fade-in";
+            document.getElementById('chat-container').appendChild(div);
+            div.scrollIntoView();
             return id;
         }
-        function removeMessage(id) { const el = document.getElementById(id); if (el) el.remove(); }
-        function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
-        // --- MENU LOGIC (Enhanced with Search, Categories, Quantities) ---
+
+        function removeMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
         async function toggleMenu() {
             const modal = document.getElementById('menu-modal');
-            const isHidden = modal.classList.contains('hidden');
-            if (isHidden) {
-                modal.classList.remove('hidden');
-                if (menuData.length === 0) await loadMenu();
-                else renderMenu();
-            } else {
-                modal.classList.add('hidden');
-            }
+            modal.classList.toggle('hidden');
+            if (menuData.length === 0 && !modal.classList.contains('hidden')) await loadMenu();
+            else if (!modal.classList.contains('hidden')) renderMenu();
         }
+
         async function loadMenu() {
             try {
                 const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'get_menu' }) });
                 const data = await res.json();
                 menuData = data.menu || [];
                 renderMenu();
-            } catch(e) {
-                menuContent.innerHTML = '<div class="text-center text-zinc-500 p-8">Failed to load menu.</div>';
+            } catch (e) {
+                document.getElementById('menu-content').innerHTML = '<div class="text-center text-red-400 p-8">Failed to load menu. Check connection.</div>';
             }
         }
-        function renderMenu(filteredData = menuData) {
-            // Group by category for better UX
-            const groups = filteredData.reduce((acc, item) => {
+
+        function renderMenu(data = menuData) {
+            const groups = data.reduce((acc, item) => {
                 const cat = item.cat || 'Other';
-                if (!acc[cat]) acc[cat] = [];
+                acc[cat] = acc[cat] || [];
                 acc[cat].push(item);
                 return acc;
             }, {});
 
             let html = '';
-            for (let cat in groups) {
-                html += `<div class="mb-6">
-                    <h3 class="text-lg font-bold mb-3 text-zinc-300 sticky top-0 glass p-3 rounded-xl border-b border-zinc-800/50">${cat}</h3>
-                    ${groups[cat].map(item => {
-                        const qty = cart.filter(c => c.id === item.id).length; // Simple quantity count
-                        let visualHTML = item.image ?
-                            `<div class="relative w-20 h-20 rounded-xl overflow-hidden bg-zinc-800 shrink-0 ring-1 ring-white/10"><img src="${item.image}" loading="lazy" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="absolute inset-0 hidden items-center justify-center text-4xl bg-zinc-800" style="display:none;">${item.emoji}</div></div>` :
-                            `<div class="w-20 h-20 rounded-xl bg-zinc-800/50 flex items-center justify-center text-4xl shrink-0 ring-1 ring-white/10">${item.emoji}</div>`;
-                        return `
-                        <div class="glass p-3 rounded-2xl flex justify-between items-center fade-in border border-zinc-800/50 active:bg-zinc-800 transition-colors mb-3">
-                            <div class="flex items-center gap-4 overflow-hidden">
-                                ${visualHTML}
-                                <div class="min-w-0">
-                                    <div class="font-bold text-base truncate text-zinc-100 mb-1">${item.name}</div>
-                                    <div class="text-sm text-red-400 font-bold">${item.price} EGP</div>
-                                    ${qty > 0 ? `<div class="text-xs text-emerald-400 mt-1">Qty: ${qty}</div>` : ''}
-                                </div>
+            for (const cat in groups) {
+                html += `<h3 class="text-lg font-bold mb-4 text-zinc-300 sticky top-0 glass p-3 rounded-xl">${cat}</h3>`;
+                html += groups[cat].map(item => {
+                    const qty = cart.filter(c => c.id === item.id).length;
+                    const img = item.image ? `<img src="${item.image}" class="w-full h-full object-cover rounded-xl" onerror="this.style.display='none';this.nextSibling.style.display='flex'">` : '';
+                    return `
+                    <div class="glass p-4 rounded-2xl flex justify-between items-center border border-zinc-800/50 mb-3">
+                        <div class="flex items-center gap-4">
+                            <div class="w-20 h-20 rounded-xl bg-zinc-800/50 flex items-center justify-center text-4xl shrink-0">${img}<div class="hidden w-full h-full items-center justify-center">${item.emoji}</div></div>
+                            <div>
+                                <div class="font-bold">${item.name}</div>
+                                <div class="text-red-400 font-bold">${item.price} EGP</div>
+                                ${qty ? `<div class="text-emerald-400 text-xs">In cart: ${qty}</div>` : ''}
                             </div>
-                            <div class="flex gap-2 shrink-0">
-                                <button onclick="explainItem('${item.name}')" class="w-10 h-10 rounded-xl flex items-center justify-center text-zinc-400 border border-zinc-700/50 glass active:text-white">?</button>
-                                <button onclick="removeFromCart('${item.id}')" class="w-10 h-10 rounded-xl flex items-center justify-center text-red-400 border border-zinc-700/50 glass active:bg-red-500/20 ${qty === 0 ? 'hidden' : ''}">-</button>
-                                <button onclick="addToCart('${item.id}')" class="glass w-10 h-10 rounded-xl flex items-center justify-center text-green-400 border border-zinc-700/50 text-xl active:bg-green-500/20">+</button>
-                            </div>
-                        </div>`;
-                    }).join('')}
-                </div>`;
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="explainItem('${item.name}')" class="w-10 h-10 rounded-xl border border-zinc-700/50 glass text-zinc-400 active:text-white">?</button>
+                            <button onclick="removeFromCart('${item.id}')" class="w-10 h-10 rounded-xl border border-zinc-700/50 glass text-red-400 ${qty?'':'hidden'}">-</button>
+                            <button onclick="addToCart('${item.id}')" class="w-10 h-10 rounded-xl border border-zinc-700/50 glass text-green-400 text-xl active:bg-green-500/20">+</button>
+                        </div>
+                    </div>`;
+                }).join('');
             }
-            menuContent.innerHTML = html || '<div class="text-center text-zinc-500 p-8">No items found.</div>';
+            document.getElementById('menu-content').innerHTML = html || '<div class="text-center text-zinc-500">No items found.</div>';
             updateCartUI();
         }
+
         function filterMenu() {
-            const search = document.getElementById('menu-search').value.toLowerCase();
-            const filtered = menuData.filter(item => item.name.toLowerCase().includes(search) || item.desc.toLowerCase().includes(search));
+            const term = document.getElementById('menu-search').value.toLowerCase();
+            const filtered = menuData.filter(item => item.name.toLowerCase().includes(term) || (item.desc && item.desc.toLowerCase().includes(term)));
             renderMenu(filtered);
         }
-        async function explainItem(itemName) {
+
+        async function explainItem(name) {
             const toast = document.getElementById('toast-note');
-            const toastText = document.getElementById('toast-text');
+            document.getElementById('toast-text').innerText = currentLang === 'ar' ? "جاري تحميل الوصف..." : "Loading description...";
             toast.classList.remove('hidden');
-            toastText.innerText = currentLang === 'ar' ? "كينجي يقرأ المكونات..." : "Kenji is checking ingredients...";
             try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'chat', message: `Describe ${itemName}`, context: 'explain', lang: currentLang })
-                });
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'chat', message: `Describe ${name}`, context: 'explain', lang: currentLang }) });
                 const data = await res.json();
-                toastText.innerText = data.text;
-                setTimeout(() => { toast.classList.add('hidden'); }, 6000);
-            } catch(e) { toast.classList.add('hidden'); }
+                document.getElementById('toast-text').innerHTML = data.text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                setTimeout(() => toast.classList.add('hidden'), 7000);
+            } catch (e) {
+                toast.classList.add('hidden');
+            }
         }
+
         function addToCart(id) {
-            const item = menuData.find(i => i.id == id);
-            if(item) {
+            const item = menuData.find(i => i.id === id);
+            if (item) {
                 cart.push(item);
-                localStorage.setItem('cart', JSON.stringify(cart));
+                localStorage.setItem('sushi_cart', JSON.stringify(cart));
                 updateCartUI();
-                renderMenu(); // Refresh quantities
-                const btn = event.target;
-                const oldText = btn.innerText;
-                btn.innerText = '✓';
-                btn.classList.add('text-green-500');
-                setTimeout(() => { btn.innerText = oldText; btn.classList.remove('text-green-500'); }, 800);
+                renderMenu();
             }
         }
+
         function removeFromCart(id) {
-            const index = cart.findIndex(c => c.id === id);
-            if (index > -1) {
-                cart.splice(index, 1);
-                localStorage.setItem('cart', JSON.stringify(cart));
+            const idx = cart.findIndex(c => c.id === id);
+            if (idx > -1) {
+                cart.splice(idx, 1);
+                localStorage.setItem('sushi_cart', JSON.stringify(cart));
                 updateCartUI();
-                renderMenu(); // Refresh
+                renderMenu();
             }
         }
+
         function updateCartUI() {
             const bar = document.getElementById('cart-bar');
             if (cart.length > 0) {
                 bar.classList.remove('hidden');
-                document.getElementById('cart-count').innerText = `${cart.length} ${UI[currentLang].items}`;
-                const sum = cart.reduce((acc, item) => acc + item.price, 0);
+                const sum = cart.reduce((a, i) => a + i.price, 0);
                 document.getElementById('cart-total').innerText = `${sum} EGP`;
+                document.getElementById('cart-count').innerText = `${cart.length} ${UI[currentLang].items}`;
             } else {
                 bar.classList.add('hidden');
             }
         }
+
         function showCheckout() {
-            document.getElementById('ui-menu-title').innerText = UI[currentLang].checkout;
-            const sum = cart.reduce((acc, item) => acc + item.price, 0);
-            const txt = UI[currentLang];
-           
-            // Group cart items for display
-            const cartGroups = cart.reduce((acc, item) => {
-                acc[item.id] = (acc[item.id] || 0) + 1;
-                return acc;
-            }, {});
-            let cartHtml = '';
-            for (let id in cartGroups) {
-                const item = menuData.find(i => i.id == id);
-                if (item) cartHtml += `<div class="flex justify-between text-sm mb-2"><span>${item.name} x${cartGroups[id]}</span><span>${item.price * cartGroups[id]} EGP</span></div>`;
+            const sum = cart.reduce((a, i) => a + i.price, 0);
+            const grouped = cart.reduce((acc, i) => { acc[i.id] = (acc[i.id] || 0) + 1; return acc; }, {});
+            let list = '';
+            for (const id in grouped) {
+                const item = menuData.find(i => i.id === id);
+                if (item) list += `<div class="flex justify-between text-sm mb-2"><span>${item.name} ×${grouped[id]}</span><span>${item.price * grouped[id]} EGP</span></div>`;
             }
-           
-            menuContent.innerHTML = `
-                <div class="space-y-4 fade-in">
-                    <div class="glass p-6 rounded-2xl border border-zinc-800/50">
-                        <div class="text-zinc-400 text-sm mb-2">${txt.total}</div>
-                        <div class="text-4xl font-bold text-emerald-400 mb-1">${sum} EGP</div>
-                        <div class="text-xs text-zinc-500 mb-4">${cart.length} ${txt.items}</div>
-                        <div class="border-t border-zinc-800/50 pt-4">${cartHtml}</div>
+            document.getElementById('ui-menu-title').innerText = UI[currentLang].checkout;
+            document.getElementById('menu-content').innerHTML = `
+                <div class="space-y-6 p-4">
+                    <div class="glass p-6 rounded-2xl border border-zinc-800/50 text-center">
+                        <div class="text-zinc-400 text-sm">${UI[currentLang].total}</div>
+                        <div class="text-4xl font-bold text-emerald-400">${sum} EGP</div>
+                        <div class="text-xs text-zinc-500 mt-2">${cart.length} ${UI[currentLang].items}</div>
+                        <div class="border-t border-zinc-700/50 mt-4 pt-4 text-left">${list}</div>
                     </div>
-                   
-                    <div class="space-y-3 mt-6">
-                        <button onclick="processPayment('Cash')" class="w-full glass p-5 rounded-2xl flex justify-between items-center active:bg-zinc-800 border border-zinc-800/50">
-                            <div class="flex items-center gap-3">
-                                <span class="text-3xl">💵</span>
-                                <div class="text-start">
-                                    <div class="font-bold text-base">${txt.cash}</div>
-                                    <div class="text-xs text-zinc-500">${txt.cashDesc}</div>
-                                </div>
-                            </div>
+                    <div class="space-y-3">
+                        <button onclick="processPayment('Cash')" class="w-full glass p-5 rounded-2xl flex items-center justify-between active:bg-zinc-800">
+                            <div class="flex items-center gap-3"><span class="text-3xl">💵</span><div><div class="font-bold">${UI[currentLang].cash}</div><div class="text-xs text-zinc-500">${UI[currentLang].cashDesc}</div></div></div>
                         </button>
-                        <button onclick="processPayment('POS')" class="w-full glass p-5 rounded-2xl flex justify-between items-center active:bg-zinc-800 border border-zinc-800/50">
-                            <div class="flex items-center gap-3">
-                                <span class="text-3xl">💳</span>
-                                <div class="text-start">
-                                    <div class="font-bold text-base">${txt.pos}</div>
-                                    <div class="text-xs text-zinc-500">${txt.posDesc}</div>
-                                </div>
-                            </div>
+                        <button onclick="processPayment('POS')" class="w-full glass p-5 rounded-2xl flex items-center justify-between active:bg-zinc-800">
+                            <div class="flex items-center gap-3"><span class="text-3xl">💳</span><div><div class="font-bold">${UI[currentLang].pos}</div><div class="text-xs text-zinc-500">${UI[currentLang].posDesc}</div></div></div>
                         </button>
                     </div>
-                    <div class="text-xs text-zinc-500 text-center mt-6 p-4 glass rounded-xl border border-zinc-800/50">
-                        <span class="text-base mr-1">⏱️</span> ${txt.waiter}
+                    <div class="text-center text-xs text-zinc-500 p-4 glass rounded-xl border border-zinc-800/50">
+                        ⏱️ ${UI[currentLang].waiter}
                     </div>
-                </div>
-            `;
+                </div>`;
             document.getElementById('cart-bar').classList.add('hidden');
         }
+
         function processPayment(type) {
             toggleMenu();
             const msg = type === 'Cash'
-                ? (currentLang === 'ar' ? "✅ تم تأكيد الطلب! سأبلغ النادل بالدفع النقدي." : "✅ Confirmed! Paying Cash.")
-                : (currentLang === 'ar' ? "✅ تم تأكيد الطلب! النادل سيحضر ماكينة البطاقات." : "✅ Confirmed! Waiter bringing POS.");
-           
+                ? (currentLang === 'ar' ? "✅ تم تأكيد الطلب! الدفع كاش عند النادل." : "✅ Order confirmed! Paying cash.")
+                : (currentLang === 'ar' ? "✅ تم التأكيد! النادل جاي بالماكينة." : "✅ Confirmed! Waiter bringing card machine.");
             addMessage(msg, 'ai');
             cart = [];
-            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('sushi_cart', JSON.stringify(cart));
             updateCartUI();
-            setTimeout(() => {
-                sendMessageInternal("Upsell drinks", "upsell");
-            }, 2500);
+            setTimeout(() => sendMessageInternal("Any drinks to complete your meal?", "upsell"), 3000);
         }
     </script>
 </body>
 </html>
-
